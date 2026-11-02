@@ -81,8 +81,8 @@ ol {
   gap: 12px;
 }
 .logo__mark {
-  width: 26px;
-  height: 34px;
+  width: auto;
+  height: 40px;
 }
 .logo__txt {
   display: flex;
@@ -759,8 +759,8 @@ ol {
   gap: 20px;
 }
 .footer .logo__mark {
-  width: 20px;
-  height: 26px;
+  width: auto;
+  height: 30px;
 }
 .footer .logo__name {
   font-size: 14px;
