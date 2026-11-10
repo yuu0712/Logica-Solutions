@@ -1,0 +1,2258 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>AI営業ロープレ 体験デモ（3分）｜Logica Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-screen video-call app. Lobby (pick a customer) → meeting room (stage + chat panel + toolbar) → scorecard.
+   Single dark theme by choice: it imitates a video-meeting client. */
+:root {
+  color-scheme: dark;
+  --bg: #16171b;
+  --bar: #0f1013;
+  --surface: #202228;
+  --surface-2: #2a2d35;
+  --line: #373a44;
+  --fg: #eceef3;
+  --muted: #959bab;
+  --accent: #4a86ff;
+  --accent-soft: rgba(74, 134, 255, .16);
+  --speak: #3cc982;
+  --good: #3cc982;
+  --warn: #f2b443;
+  --danger: #e8524f;
+  --scrim: rgba(8, 9, 12, .66);
+  --font-body: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --r: 10px;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; line-height: 1.6; overflow: hidden; }
+img { max-width: 100%; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ic { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+.screen { height: 100%; }
+
+/* ---------- Lobby ---------- */
+.lobby { overflow-y: auto; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-block: 28px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.brand { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.brand-mark { width: 44px; height: 44px; border-radius: 12px; background: var(--accent); display: grid; place-items: center; color: #fff; flex: none; }
+.brand h1 { margin: 0; font-size: 22px; line-height: 1.3; letter-spacing: .02em; }
+.brand p { margin: 2px 0 0; color: var(--muted); }
+.banner { border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 10px 14px; margin-bottom: 18px; color: var(--muted); }
+.banner.warn { border-color: rgba(242, 180, 67, .5); color: var(--warn); }
+.lobby-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 32px; align-items: start; }
+.step-label { font-size: 12px; letter-spacing: .08em; color: var(--muted); font-weight: 500; margin: 0 0 10px; }
+.step-label b { color: var(--fg); font-family: var(--font-num); margin-right: 6px; }
+.scenarios { display: grid; gap: 10px; margin-bottom: 26px; }
+.sc { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: center; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px; transition: border-color .15s, background .15s; }
+.sc:hover { border-color: #4a4e5a; }
+.sc[aria-checked="true"] { border-color: var(--accent); background: linear-gradient(var(--accent-soft), var(--accent-soft)), var(--surface); }
+.sc-thumb { aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: var(--surface-2); position: relative; max-width: 100%; }
+.sc-thumb .avatar { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sc-thumb.plus { display: grid; place-items: center; color: var(--muted); }
+.sc-name { font-weight: 700; font-size: 15px; }
+.sc-name small { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
+.sc-meta { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.sc-product { display: inline-block; margin-top: 4px; font-size: 12px; padding: 1px 8px; border-radius: 99px; background: var(--surface-2); color: var(--fg); }
+.custom { display: grid; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; margin: -14px 0 26px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field > span { font-size: 12.5px; color: var(--muted); }
+.field input, .field textarea { width: 100%; box-sizing: border-box; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px; resize: vertical; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 3px; gap: 3px; }
+.seg button { border: 0; background: transparent; padding: 6px 16px; border-radius: 6px; color: var(--muted); }
+.seg button[aria-checked="true"] { background: var(--surface-2); color: var(--fg); font-weight: 500; }
+.seg-note { color: var(--muted); font-size: 12.5px; margin: 6px 0 0; }
+.conds { display: grid; gap: 14px; }
+
+.preview { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r); overflow: hidden; background: var(--surface); max-width: 100%; }
+.preview .avatar { position: absolute; inset: 0; width: 100%; height: 100%; }
+.brief { margin: 14px 0 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 13px; }
+.brief dt { color: var(--muted); white-space: nowrap; }
+.brief dd { margin: 0; }
+.btn { border: 0; border-radius: 9px; padding: 11px 18px; font-weight: 500; background: var(--surface-2); }
+.btn:hover:not(:disabled) { filter: brightness(1.12); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:disabled { background: var(--surface-2); color: var(--muted); }
+.btn-wide { width: 100%; font-size: 15px; padding: 13px; }
+.btn-danger { background: var(--danger); color: #fff; }
+.fine { color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+.history { margin-top: 26px; }
+.history ol { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.history li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 9px 12px; border-top: 1px solid var(--line); font-size: 13px; }
+.history li:first-child { border-top: 0; }
+.history .h-sub { color: var(--muted); font-size: 11.5px; }
+.history .h-score { font-family: var(--font-num); font-size: 17px; }
+.history .empty { color: var(--muted); padding: 14px 12px; }
+
+/* ---------- Meeting ---------- */
+.meeting { display: flex; flex-direction: column; }
+.topbar { flex: none; height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bar); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); font-size: 13px; }
+.tb-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tb-left .ic { width: 17px; height: 17px; color: var(--good); }
+.tb-left span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-mid { display: flex; align-items: center; gap: 10px; flex: none; }
+.rec { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); letter-spacing: .06em; }
+.rec i { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); animation: pulse 1.6s infinite; }
+.timer { font-size: 13px; }
+.interest { display: flex; align-items: center; gap: 8px; flex: none; }
+.interest > span { color: var(--muted); font-size: 12px; }
+.meter { width: 110px; height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.meter div { height: 100%; width: 30%; background: var(--warn); border-radius: 99px; transition: width .6s ease, background .6s; }
+.interest b { font-family: var(--font-num); font-weight: 500; width: 2.2em; text-align: right; }
+.delta { font-family: var(--font-num); font-size: 11.5px; width: 2.6em; opacity: 0; transition: opacity .3s; }
+.delta.show { opacity: 1; }
+.delta.up { color: var(--good); }
+.delta.down { color: var(--danger); }
+
+.mbody { flex: 1; min-height: 0; display: flex; }
+.stage { flex: 1; min-width: 0; min-height: 0; position: relative; container-type: size; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; align-content: center; }
+.tile { position: relative; background: var(--surface); border-radius: var(--r); overflow: hidden; aspect-ratio: 16 / 9; max-width: 100%; }
+.tile::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 3px solid transparent; pointer-events: none; transition: border-color .15s; z-index: 4; }
+.tile.speaking::after { border-color: var(--speak); }
+.tile .avatar { position: absolute; inset: 0; width: 100%; height: 100%; display: block; transition: opacity .5s; }
+.stage.speaker .tile.main { width: min(calc(100cqw - 24px), calc((100cqh - 24px) * 16 / 9)); }
+.stage.speaker .tile.self { position: absolute; top: 18px; right: 18px; width: clamp(110px, 21cqw, 240px); z-index: 5; box-shadow: 0 6px 20px rgba(0, 0, 0, .45); }
+.stage.gallery .tile { width: min(calc(50cqw - 20px), calc((100cqh - 24px) * 16 / 9)); }
+@container (orientation: portrait) {
+  .stage.gallery .tile { width: min(calc(100cqw - 24px), calc((50cqh - 20px) * 16 / 9)); }
+}
+.self { display: grid; place-items: center; background: var(--surface-2); }
+.initial { width: 26%; aspect-ratio: 1; border-radius: 50%; background: #5b6cc4; display: grid; place-items: center; font-weight: 700; font-size: clamp(14px, 3.4cqw, 40px); color: #fff; max-width: 100%; }
+.nameplate { position: absolute; left: 8px; bottom: 8px; z-index: 3; display: inline-flex; align-items: center; gap: 5px; background: var(--scrim); color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 4px; max-width: calc(100% - 16px); }
+.nameplate .ic { width: 14px; height: 14px; color: var(--danger); }
+.nameplate span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.caption { position: absolute; left: 50%; bottom: 13%; transform: translateX(-50%); z-index: 3; width: max-content; max-width: 84%; background: var(--scrim); color: #fff; border-radius: 6px; padding: 6px 12px; font-size: clamp(12px, 1.7cqw, 17px); line-height: 1.55; text-align: center; transition: opacity .4s; }
+.caption.fade { opacity: 0; }
+.caption .who { color: #aebcff; margin-right: 6px; font-size: .85em; }
+.dots { display: inline-flex; gap: 4px; padding: 4px 2px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: .4; animation: dot 1.2s infinite; }
+.dots i:nth-child(2) { animation-delay: .2s; }
+.dots i:nth-child(3) { animation-delay: .4s; }
+.join-note { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); z-index: 2; font-size: 14px; }
+.tile.joining .avatar { opacity: 0; }
+.toast { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 8; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; font-size: 13px; white-space: nowrap; box-shadow: 0 6px 18px rgba(0, 0, 0, .4); }
+.hint { position: absolute; left: 16px; bottom: 16px; z-index: 8; width: min(380px, calc(100% - 32px)); box-sizing: border-box; background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--warn); border-radius: 8px; padding: 10px 34px 10px 12px; font-size: 13px; box-shadow: 0 8px 22px rgba(0, 0, 0, .45); }
+.hint b { display: block; font-size: 11.5px; color: var(--warn); letter-spacing: .06em; margin-bottom: 2px; }
+.hint .x { position: absolute; top: 6px; right: 6px; border: 0; background: transparent; color: var(--muted); padding: 4px; line-height: 0; }
+
+.panel { flex: none; width: 340px; display: flex; flex-direction: column; background: var(--surface); border-left: 1px solid var(--line); min-height: 0; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); font-weight: 500; }
+.panel-head small { color: var(--muted); font-weight: 400; font-size: 12px; }
+.log { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+.msg .meta { font-size: 11.5px; color: var(--muted); margin-bottom: 2px; }
+.msg .meta b { color: var(--fg); font-weight: 500; margin-right: 4px; }
+.msg .meta time { margin-left: 6px; font-family: var(--font-num); }
+.msg .bubble { white-space: pre-wrap; word-break: break-word; }
+.msg.me .meta b { color: #aebcff; }
+.msg.sys { align-self: center; text-align: center; font-size: 12px; color: var(--muted); background: var(--bg); border-radius: 99px; padding: 3px 12px; max-width: 100%; }
+.msg.sys.err { color: var(--warn); border-radius: 8px; }
+.msg.sys button { margin-left: 8px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 6px; padding: 1px 10px; font-size: 12px; }
+.composer { border-top: 1px solid var(--line); padding: 10px 12px 12px; display: grid; gap: 6px; }
+.composer .to { font-size: 11.5px; color: var(--muted); }
+.composer textarea { width: 100%; box-sizing: border-box; resize: none; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-height: 62px; line-height: 1.5; }
+.composer textarea:focus { outline: none; border-color: var(--accent); }
+.composer-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.composer-row span { color: var(--muted); font-size: 12px; min-width: 0; }
+.composer-row .btn { padding: 6px 16px; flex: none; white-space: nowrap; }
+
+.toolbar { flex: none; display: flex; align-items: center; gap: 8px; background: var(--bar); padding-block: 6px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); position: relative; }
+.tools { flex: 1; min-width: 0; display: flex; justify-content: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.tool { flex: none; display: grid; justify-items: center; gap: 2px; border: 0; background: transparent; border-radius: 8px; padding: 6px 10px; min-width: 64px; font-size: 11px; color: var(--fg); }
+.tool:hover:not(:disabled) { background: var(--surface-2); }
+.tool[aria-pressed="false"] { color: var(--muted); }
+.tool:disabled { color: var(--muted); }
+.tool .ic { width: 22px; height: 22px; }
+.tool.mute .ic { color: var(--danger); }
+.end-btn { flex: none; }
+.popover { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(100% + 8px); z-index: 20; width: min(300px, calc(100vw - 32px)); box-sizing: border-box; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .5); }
+.popover p { margin: 0 0 12px; }
+.popover .btn { width: 100%; margin-top: 6px; }
+
+/* ---------- Report ---------- */
+.report { overflow-y: auto; }
+.scoring { min-height: 70vh; display: grid; place-items: center; text-align: center; }
+.spinner { width: 46px; height: 46px; border-radius: 50%; border: 4px solid var(--surface-2); border-top-color: var(--accent); animation: spin 1s linear infinite; margin: 0 auto 18px; }
+.scoring h2 { margin: 0 0 4px; font-size: 18px; }
+.scoring p { color: var(--muted); margin: 0 0 16px; }
+.r-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 18px; }
+.r-head h1 { margin: 0; font-size: 20px; line-height: 1.35; text-wrap: balance; }
+.r-head .sub { color: var(--muted); font-size: 13px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; min-width: 0; }
+.card h3 { margin: 0 0 12px; font-size: 13px; letter-spacing: .06em; color: var(--muted); font-weight: 500; }
+.hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; margin-bottom: 16px; }
+.ring { position: relative; width: 150px; height: 150px; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .val { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; }
+.ring .val b { font-family: var(--font-num); font-size: 42px; line-height: 1; font-weight: 500; }
+.ring .val span { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.rank { font-family: var(--font-num); font-size: 13px; padding: 2px 10px; border-radius: 6px; background: var(--surface-2); margin-right: 8px; }
+.chip { display: inline-block; font-size: 12.5px; padding: 2px 12px; border-radius: 99px; border: 1px solid currentColor; }
+.chip.good { color: var(--good); } .chip.accent { color: var(--accent); } .chip.warn { color: var(--warn); } .chip.danger { color: var(--danger); }
+.summary { font-size: 15px; line-height: 1.75; margin: 12px 0 0; max-width: 60ch; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-bottom: 16px; }
+.radar { width: 100%; max-width: 420px; display: block; margin: 0 auto; }
+.radar .grid { fill: none; stroke: var(--line); }
+.radar .axis { stroke: var(--line); }
+.radar .area { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.radar .pt { fill: var(--accent); }
+.radar text { fill: var(--muted); font-size: 11.5px; font-family: var(--font-body); }
+.radar text.v { fill: var(--fg); font-family: var(--font-num); font-size: 11px; }
+.cats { display: grid; gap: 12px; }
+.cat-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.cat-top b { font-weight: 500; }
+.cat-top span { font-family: var(--font-num); }
+.bar { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin: 4px 0 3px; }
+.bar div { height: 100%; border-radius: 99px; }
+.cat p { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.stat .k { color: var(--muted); font-size: 12px; }
+.stat .v { font-family: var(--font-num); font-size: 24px; line-height: 1.3; }
+.stat .v small { font-size: 13px; color: var(--muted); margin-left: 2px; font-family: var(--font-body); }
+.ratio { position: relative; height: 8px; border-radius: 99px; background: var(--surface-2); margin-top: 6px; }
+.ratio .zone { position: absolute; top: 0; bottom: 0; left: 30%; width: 20%; background: rgba(60, 201, 130, .28); }
+.ratio .mark { position: absolute; top: -4px; width: 3px; height: 16px; border-radius: 2px; background: var(--fg); transform: translateX(-50%); }
+.stat .note { color: var(--muted); font-size: 11.5px; margin-top: 4px; }
+ul.plain { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+ul.plain li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; }
+ul.plain li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; margin-top: 8px; background: var(--muted); }
+ul.good li::before { background: var(--good); }
+ul.bad li::before { background: var(--warn); }
+.needs li .st { font-size: 11.5px; padding: 0 8px; border-radius: 99px; margin-left: 6px; white-space: nowrap; }
+.needs li.found::before { background: var(--good); }
+.needs li.missed::before { background: var(--danger); }
+.needs li.found .st { color: var(--good); background: rgba(60, 201, 130, .12); }
+.needs li.missed .st { color: var(--danger); background: rgba(232, 82, 79, .12); }
+.rw { display: grid; gap: 6px; padding: 12px 0; border-top: 1px solid var(--line); }
+.rw:first-of-type { border-top: 0; padding-top: 0; }
+.rw .lab { font-size: 11.5px; color: var(--muted); letter-spacing: .04em; }
+.rw .before { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(232, 82, 79, .7); }
+.rw .after { color: var(--fg); }
+.rw .why { font-size: 12.5px; color: var(--muted); }
+.voice { font-size: 15.5px; line-height: 1.8; margin: 0; padding-left: 14px; border-left: 3px solid var(--surface-2); }
+.voice-by { color: var(--muted); font-size: 12.5px; margin-top: 8px; }
+.mb { margin-bottom: 16px; }
+details.transcript summary { cursor: pointer; color: var(--muted); }
+details.transcript .lines { margin-top: 12px; display: grid; gap: 8px; font-size: 13px; }
+details.transcript .lines div { display: grid; grid-template-columns: 3.4em minmax(0, 1fr); gap: 8px; }
+details.transcript .lines b { color: var(--muted); font-weight: 500; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.err-box { min-height: 60vh; display: grid; place-items: center; text-align: center; }
+.err-box p { color: var(--muted); max-width: 46ch; }
+
+/* ---------- Customer illustration ---------- */
+.av3d-bg { position: absolute; inset: -12px; z-index: 1; background: var(--surface) center / cover no-repeat; filter: blur(2.5px) brightness(.92); }
+.av3d { position: absolute; inset: 0; z-index: 2; }
+.av3d canvas { display: block; width: 100% !important; height: 100% !important; }
+.tile.joining .av3d, .tile.joining .av3d-bg { opacity: 0; }
+.tile.has3d > svg.avatar { visibility: hidden; }
+.join-note { z-index: 3; }
+.join-note small { display: block; margin-top: 4px; font-size: 12px; text-align: center; }
+
+/* ---------- Comparison with the model roleplay ---------- */
+.cat-top small.w { margin-left: 8px; font-weight: 400; font-size: 11px; color: var(--muted); }
+ .pro-sum { margin: 0 0 12px; line-height: 1.7; }
+ol.prosteps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+ol.prosteps li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+ol.prosteps li:first-child { border-top: 0; padding-top: 0; }
+ol.prosteps .mark { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+ol.prosteps .mark.ok { color: var(--good); background: rgba(60, 201, 130, .14); }
+ol.prosteps .mark.part { color: var(--warn); background: rgba(242, 180, 67, .14); }
+ol.prosteps .mark.ng { color: var(--danger); background: rgba(232, 82, 79, .14); }
+.pro-step { font-weight: 500; margin-bottom: 4px; }
+.pro-line { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.pro-line span { display: inline-block; min-width: 6.5em; font-size: 11.5px; letter-spacing: .03em; }
+.pro-line.pro { color: var(--fg); }
+.pro-line.pro span { color: #8fb0ff; }
+
+/* ---------- Saved results ---------- */
+.history ol { max-height: 360px; overflow-y: auto; }
+.history li.has-btn { padding: 0; display: block; }
+.h-row { width: 100%; border: 0; background: transparent; text-align: left; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 9px 12px; font-size: 13px; }
+.h-row:hover { background: var(--surface-2); }
+.save-status { font-size: 12.5px; color: var(--muted); }
+.save-status.ok { color: var(--good); }
+.save-status.warn { color: var(--warn); }
+
+/* ---------- Voice version additions ---------- */
+.setup { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; margin-bottom: 14px; display: grid; gap: 10px; }
+.setup h3 { margin: 0; font-size: 14px; }
+.setup p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.setup a { color: #8fb0ff; }
+.key-row { display: flex; gap: 8px; }
+.key-row input { flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px; }
+.key-row input:focus { outline: none; border-color: var(--accent); }
+.key-row .btn { padding: 8px 14px; white-space: nowrap; }
+.status { font-size: 12.5px; }
+.status.ok { color: var(--good); }
+.status.err { color: var(--danger); }
+.status.wait { color: var(--muted); }
+.check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; cursor: pointer; }
+.check input { margin-top: 4px; accent-color: var(--accent); }
+.check small { display: block; color: var(--muted); font-size: 12px; }
+.sel { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; max-width: 100%; }
+.self video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.self .nameplate { z-index: 3; }
+.nameplate .ic.on { color: #fff; }
+.tool.mute .ic { color: var(--danger); }
+.tool.live .ic { color: var(--fg); }
+.mic-level { position: absolute; right: 8px; bottom: 8px; z-index: 3; display: flex; gap: 2px; align-items: flex-end; height: 14px; }
+.mic-level i { width: 3px; border-radius: 2px; background: var(--speak); height: 3px; transition: height .08s; }
+.heard { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); z-index: 6; max-width: 80%; background: var(--scrim); color: #fff; border-radius: 6px; padding: 4px 12px; font-size: 13px; }
+.heard .who { color: #9ef0c2; margin-right: 6px; font-size: .85em; }
+.heard .wait { display: block; height: 2px; margin-top: 5px; border-radius: 2px; background: var(--speak); transform-origin: left center; }
+.heard { pointer-events: auto; }
+.pass-btn { flex: none; font-weight: 700; padding: 10px 18px; }
+.pass-btn small { margin-left: 6px; font-weight: 400; font-size: 11px; opacity: .75; }
+.pass-btn:disabled { background: var(--surface-2); color: var(--muted); }
+.heard .send-now { margin-left: 10px; border: 1px solid rgba(255, 255, 255, .35); background: rgba(255, 255, 255, .12); color: #fff; border-radius: 6px; padding: 1px 8px; font-size: 12px; vertical-align: 1px; }
+.heard .send-now:hover { background: rgba(255, 255, 255, .22); }
+.heard .send-now small { margin-left: 5px; opacity: .7; font-size: 10.5px; }
+.voice-state { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.voice-state i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.voice-state.listen i { background: var(--speak); animation: pulse 1.2s infinite; }
+.voice-state.ai i { background: var(--accent); }
+
+@keyframes pulse { 50% { opacity: .35; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes dot { 30% { opacity: 1; transform: translateY(-2px); } }
+@keyframes blink { 0%, 95%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 35% { transform: translateY(.8px) rotate(.6deg); } 70% { transform: translateY(-.4px) rotate(-.5deg); } }
+@keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(.7px); } }
+.avatar .eyes { transform-box: fill-box; transform-origin: center; animation: blink 4.6s infinite; }
+.avatar .av-head { transform-box: fill-box; transform-origin: 50% 100%; animation: bob 7s ease-in-out infinite; }
+.avatar .av-figure { animation: breathe 5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .avatar .eyes, .avatar .av-head, .avatar .av-figure, .rec i, .dots i { animation: none; }
+  .spinner { animation-duration: 3s; }
+}
+
+@media (max-width: 880px) {
+  .lobby-grid { grid-template-columns: minmax(0, 1fr); }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .mbody { flex-direction: column; }
+  .panel { width: auto; height: 46%; border-left: 0; border-top: 1px solid var(--line); }
+  .panel-head { display: none; }
+  .tb-mid .rec { display: none; }
+  .interest > span, .meter { display: none; }
+  .composer textarea { min-height: 44px; }
+  .tool { min-width: 54px; padding: 5px 6px; }
+  .tools { justify-content: flex-start; }
+}
+@media (max-width: 520px) {
+  .hero { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .summary { margin-inline: auto; }
+  .row2 { grid-template-columns: minmax(0, 1fr); }
+  .sc { grid-template-columns: 88px minmax(0, 1fr); }
+  .seg button { padding: 6px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOBBY ============ -->
+<section id="lobby" class="screen lobby">
+  <div class="wrap">
+    <header class="brand">
+      <div class="brand-mark"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg></div>
+      <div>
+        <h1>AI営業ロープレ <span style="font-size:13px;vertical-align:middle;background:var(--accent);color:#fff;border-radius:99px;padding:2px 10px;">体験デモ</span></h1>
+        <p>Logica Solutions のAI営業ロープレを、実際の画面で試せる体験デモです。AIが演じるお客様と声で商談し、終了後に6項目で採点されます。<b>デモの商談は3分まで</b>です（本番版は時間制限なく、自社用シナリオで練習できます）。</p>
+      </div>
+    </header>
+    <div id="aiBanner" class="banner">AIに接続しています…</div>
+
+    <div class="lobby-grid">
+      <div>
+        <h2 class="step-label"><b>1</b>商談相手を選ぶ</h2>
+        <div id="scenarioList" class="scenarios" role="radiogroup" aria-label="商談相手"></div>
+
+        <div id="customFields" class="custom" hidden>
+          <div class="row2">
+            <label class="field"><span>商材名</span><input id="cProduct" placeholder="例：経費精算クラウド「ケイヒナビ」"></label>
+            <label class="field"><span>相手の役職</span><input id="cRole" placeholder="例：経理部長"></label>
+          </div>
+          <label class="field"><span>商材の説明（価格や特長）</span><textarea id="cDesc" rows="2" placeholder="例：領収書をスマホで撮るだけで経費精算。月額1ユーザー500円。"></textarea></label>
+          <label class="field"><span>相手の会社・業種</span><input id="cCompany" placeholder="例：中堅の物流会社（社員800名）"></label>
+          <label class="field"><span>相手の性格・状況</span><textarea id="cPersona" rows="2" placeholder="例：保守的で、今の紙の運用で困っていないと思っている。"></textarea></label>
+        </div>
+
+        <h2 class="step-label"><b>2</b>条件を決める</h2>
+        <div class="conds">
+          <div>
+            <div class="seg" id="diffSeg" role="radiogroup" aria-label="難易度">
+              <button type="button" data-d="easy" role="radio" aria-checked="false">やさしい</button>
+              <button type="button" data-d="normal" role="radio" aria-checked="true">ふつう</button>
+              <button type="button" data-d="hard" role="radio" aria-checked="false">手ごわい</button>
+            </div>
+            <p class="seg-note" id="diffNote"></p>
+          </div>
+          <div class="row2">
+            <label class="field"><span>あなたの名前</span><input id="sellerName" value="山田" maxlength="20"></label>
+            <label class="field"><span>あなたの会社名（任意）</span><input id="sellerCompany" placeholder="例：株式会社サンプル" maxlength="30"></label>
+          </div>
+          <label class="field"><span>この商談のゴール</span><input id="goal" maxlength="80"></label>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="step-label"><b>3</b>マイクと音声の準備</h2>
+        <div class="setup">
+          <h3>そのまま始められます</h3>
+          <p>デモ版では、AIへの接続はサーバー側で用意しています。APIキーなどの設定は不要です。下の「商談を開始」が押せるようになったら準備完了です。</p>
+          <div class="row2">
+            <label class="field"><span>お客様の声</span>
+              <select class="sel" id="voiceEngine">
+                <option value="edge" selected>ブラウザの声（返事が速い）</option>
+              </select>
+            </label>
+            <label class="field"><span>相手にターンを渡す方法</span>
+              <select class="sel" id="pauseLen">
+                <option value="manual" selected>ボタンで渡す（おすすめ）</option>
+                <option value="2000">自動・黙って約2秒で渡す</option>
+                <option value="3000">自動・黙って約3秒で渡す</option>
+              </select>
+            </label>
+          </div>
+          <p>話し終えたら、画面下の「相手に渡す」ボタンかEnterキーを押すと、お客様のターンになります。お客様が考えている間と話している間はマイクが止まるので、あなたの声もスピーカーの音も拾いません。</p>
+          <p>デモでは実在の企業名・個人名や社外秘の情報は入れないでください。入力内容はAIの応答生成にのみ使われます。</p>
+          <div class="status err" id="srStatus" hidden></div>
+        </div>
+        <h2 class="step-label"><b>4</b>入室する（3分）</h2>
+        <div class="preview" id="preview"></div>
+        <dl class="brief" id="brief"></dl>
+        <button class="btn btn-primary btn-wide" id="startBtn" disabled>商談を開始</button>
+        <p class="fine">入室するとマイクの使用許可を求められます。<b>商談は3分まで</b>で、時間が来ると自動で終了して採点に進みます。チャット欄に文字で入力することもできます。</p>
+        <div class="history">
+          <h2 class="step-label">保存した結果</h2>
+          <ol id="historyList"></ol>
+          <p class="fine" id="historyNote"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEETING ============ -->
+<section id="meeting" class="screen meeting" hidden>
+  <div class="topbar">
+    <div class="tb-left">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span id="mtgTitle">オンライン商談</span>
+    </div>
+    <div class="tb-mid">
+      <span class="rec"><i></i>REC</span>
+      <span class="timer num" id="timer">残り 03:00</span>
+    </div>
+    <div class="interest" title="お客様の関心度（AIが会話に応じて更新）">
+      <span>関心度</span>
+      <div class="meter"><div id="interestFill"></div></div>
+      <b id="interestVal">30</b>
+      <span class="delta" id="interestDelta"></span>
+    </div>
+  </div>
+
+  <div class="mbody">
+    <div class="stage speaker" id="stage">
+      <div class="tile main" id="custTile">
+        <div class="av3d-bg" id="av3dBg" hidden></div>
+        <div class="av3d" id="av3d" hidden></div>
+        <div class="join-note" id="joinNote">接続しています…</div>
+        <div class="caption fade" id="caption"></div>
+        <div class="nameplate"><span id="custName"></span></div>
+      </div>
+      <div class="tile self" id="selfTile">
+        <div class="initial" id="selfInitial">山</div>
+        <video id="selfVideo" autoplay muted playsinline hidden></video>
+        <div class="nameplate"><span id="selfMicIcon"></span><span id="selfName">山田（自分）</span></div>
+        <div class="mic-level" id="micLevel" hidden><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="heard" id="heard" hidden></div>
+      <div class="toast" id="toast" hidden></div>
+      <div class="hint" id="hintBox" hidden>
+        <b>コーチからのヒント</b>
+        <div id="hintText"></div>
+        <button class="x" id="hintClose" aria-label="ヒントを閉じる"><svg class="ic" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+    </div>
+
+    <aside class="panel" id="chatPanel">
+      <div class="panel-head">ミーティングチャット <small>あなたの発言はここから</small></div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <div class="to">送信先：<b>全員</b></div>
+        <textarea id="msg" rows="2" placeholder="声で話すか、ここに入力（Enterで送信／Shift+Enterで改行）"></textarea>
+        <div class="composer-row"><span class="voice-state" id="voiceState"><i></i><span id="composerNote"></span></span><button type="submit" class="btn btn-primary" id="sendBtn">送信</button></div>
+      </form>
+    </aside>
+  </div>
+
+  <nav class="toolbar">
+    <div class="tools">
+      <button class="tool" id="tMic"></button>
+      <button class="tool" id="tVideo" aria-pressed="false">
+        <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3"/></svg><span>ビデオの開始</span>
+      </button>
+      <button class="tool" id="tChat" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>チャット
+      </button>
+      <button class="tool" id="tCC" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M10.5 10.2a2.2 2.2 0 1 0 0 3.6M17 10.2a2.2 2.2 0 1 0 0 3.6"/></svg><span>字幕</span>
+      </button>
+      <button class="tool" id="tVoice" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5v14l-4.5-4.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span>読み上げ</span>
+      </button>
+      <button class="tool" id="tLayout" aria-pressed="true">
+        <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M12 5v14"/></svg><span>スピーカー</span>
+      </button>
+      <button class="tool" id="tHint">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg>ヒント
+      </button>
+    </div>
+    <button class="btn btn-primary pass-btn" id="passBtn" disabled title="話し終えたら押してください（Enterキーでも同じ）">相手に渡す<small>Enter</small></button>
+    <button class="btn btn-danger end-btn" id="endBtn">終了</button>
+    <div class="popover" id="endPop" hidden>
+      <p id="endPopText">商談を終了して採点しますか？</p>
+      <button class="btn btn-danger" id="endConfirm">終了して採点する</button>
+      <button class="btn" id="endCancel">商談に戻る</button>
+    </div>
+  </nav>
+</section>
+
+<!-- ============ REPORT ============ -->
+<section id="report" class="screen report" hidden>
+  <div class="wrap">
+    <div id="scoring" class="scoring">
+      <div>
+        <div class="spinner"></div>
+        <h2>商談を採点しています</h2>
+        <p>会話記録を6項目で評価しています。通常10〜30秒ほどかかります。</p>
+        <p class="num" id="scoreProgress">準備しています…</p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn btn-primary" id="scoreFast" hidden>速いモデルで採点する</button>
+          <button class="btn" id="scoreCancel">採点をやめてトップに戻る</button>
+        </div>
+      </div>
+    </div>
+    <div id="scoreError" class="err-box" hidden>
+      <div>
+        <h2>採点できませんでした</h2>
+        <p id="scoreErrorText"></p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn btn-primary" id="rescoreBtn">もう一度採点する</button>
+          <button class="btn" id="errHomeBtn">トップに戻る</button>
+        </div>
+      </div>
+    </div>
+    <div id="reportBody" hidden></div>
+  </div>
+</section>
+
+<script>
+(() => {
+'use strict';
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const ls = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } },
+};
+
+/* ---------- Scenarios ---------- */
+const PERSONAS = [
+  {
+    id: 'minato', name: '佐藤 恵子', short: '佐藤', gender: 'f', age: 52,
+    company: '株式会社ミナト精工', role: '総務部長', industry: '精密部品メーカー（従業員320名・工場2拠点）',
+    product: 'クラウド勤怠管理「タイムリンク」',
+    productDesc: 'ICカードやスマホで打刻し、残業・有給を自動集計して給与ソフトに連携するクラウド勤怠管理。月額1人300円、初期費用なし。',
+    goal: '無料トライアルの合意、または現場責任者を交えたデモのアポ',
+    personality: '慎重で丁寧。前例や他社事例を重視する。変化で現場が混乱することを嫌う。',
+    situation: '展示会で名刺交換した営業からの提案。話は聞くが、今すぐ変える必要は感じていない。',
+    hidden: [
+      '紙のタイムカードの集計に毎月3日かかり、担当者が残業している',
+      '2拠点で勤怠ルールが違い、残業上限規制の管理に不安がある',
+      '工場の現場は50代以上が多く、スマホ操作への抵抗が心配',
+      '予算は年間150万円程度まで。決裁は社長だが、総務部長の推薦は通りやすい',
+    ],
+    startInterest: 30,
+    opener: 'あ、聞こえてますでしょうか。ミナト精工の佐藤です。本日はお時間いただきありがとうございます。',
+    look: { skin: '#f0c8a4', hair: 'bob', hairColor: '#3b2b23', suit: '#56657d', shirt: '#f3efe8', tie: null, glasses: true, bg: 'office' },
+    av3d: 'avaturn', photo: 'meeting',
+    ttsVoice: 'Gacrux', ttsStyle: '丁寧で慎重な口調で、言葉を選びながら少しゆっくり',
+  },
+  {
+    id: 'blueleaf', name: '黒田 健', short: '黒田', gender: 'm', age: 41,
+    company: '合同会社ブルーリーフ', role: '代表', industry: 'カフェ5店舗を運営（スタッフ約60名）',
+    product: 'モバイルオーダー「オーダリー」',
+    productDesc: 'お客様が自分のスマホで注文・決済でき、既存のPOSレジと連携するモバイルオーダー。初期費用10万円、月額1店舗9,800円＋決済手数料3.2%。',
+    goal: '1店舗でのテスト導入の合意',
+    personality: 'せっかちで率直。数字に強く、回りくどい話を嫌う。結論から聞きたがる。',
+    situation: '問い合わせフォームから資料請求した。店の合間に30分だけ時間を取った。',
+    hidden: [
+      '平日昼のピークでレジ待ちが10分を超え、お客様を逃している',
+      'アルバイトが集まらず、レジ担当を減らしたい',
+      '2年前に別の注文アプリを入れたが、操作が複雑で常連の年配客が離れ、解約した',
+      '決済手数料が利益を圧迫しないか強く気にしている（客単価は約900円）',
+    ],
+    startInterest: 35,
+    opener: 'どうも、ブルーリーフの黒田です。すみません、このあと店に出るので手短にお願いできますか。',
+    look: { skin: '#e2b38b', hair: 'short', hairColor: '#1f1b1a', suit: '#2f3b34', shirt: '#d8e2dc', tie: null, glasses: false, bg: 'cafe' },
+    av3d: 'avatarsdk', photo: 'cafe',
+    ttsVoice: 'Orus', ttsStyle: 'せっかちで歯切れよく、やや早口で率直に',
+  },
+  {
+    id: 'nova', name: '西村 遥', short: '西村', gender: 'f', age: 34,
+    company: '株式会社ノヴァクラウド', role: '人事マネージャー', industry: '業務SaaSの開発会社（社員180名）',
+    product: 'エンジニア専門の人材紹介サービス',
+    productDesc: '経験3年以上のWeb系エンジニアに特化した人材紹介。成功報酬型で、紹介手数料は理論年収の35%。入社後3か月以内の退職は返金あり。',
+    goal: '求人の預かり（契約）と、開発部長を交えた要件すり合わせのアポ',
+    personality: '論理的で比較検討型。質問が鋭く、根拠のない話には乗らない。',
+    situation: '他の紹介会社3社と取引があり、新しい会社と話すのは情報収集のつもり。',
+    hidden: [
+      '今期エンジニア10名採用の目標に対し、半年で2名しか採用できていない',
+      '既存の紹介会社は書類の質が低く、要件に合わない候補者が多い',
+      '手数料35%は高いと感じているが、質が高ければ払う用意はある',
+      '開発部長が面接に時間を割けず、選考スピードが遅い',
+    ],
+    startInterest: 40,
+    opener: 'お世話になっております。ノヴァクラウドの西村です。今日は30分ほどでお願いします。',
+    look: { skin: '#f3d0b3', hair: 'long', hairColor: '#4a3328', suit: '#2b2f3b', shirt: '#e7ebf3', tie: null, glasses: false, bg: 'modern' },
+    av3d: 'brunette', photo: 'window',
+    ttsVoice: 'Kore', ttsStyle: '論理的でてきぱきと、落ち着いたトーンで',
+  },
+];
+const CUSTOM_LOOK = { skin: '#e9c29f', hair: 'short', hairColor: '#5b5650', suit: '#2c3550', shirt: '#eef0f4', tie: '#7a2f3c', glasses: true, bg: 'office' };
+
+const DIFF = {
+  easy: { label: 'やさしい', delta: 15, note: '協力的なお客様です。質問には素直に答えてくれます。',
+    rule: '協力的で話し好き。質問には素直に答え、良い提案には分かりやすく前向きな反応を返す。反論は軽めに1回程度。' },
+  normal: { label: 'ふつう', delta: 0, note: '一般的なお客様です。必要性と費用対効果に納得すれば前向きになります。',
+    rule: 'ごく一般的な担当者。必要性と費用対効果に納得できれば前向きになる。懸念や反論を1〜2回は出す。' },
+  hard: { label: '手ごわい', delta: -10, note: '忙しく懐疑的なお客様です。根拠や数字を求め、何度も反論してきます。',
+    rule: '忙しく懐疑的。根拠、数字、他社事例、他社との比較を求める。反論を2〜3回は出し、曖昧な回答には突っ込む。簡単には次のステップに同意しない。' },
+};
+
+/* ---------- Avatar (illustrated, not a real person) ---------- */
+const BG = {
+  office: '<rect width="320" height="180" fill="#b8bec6"/><rect x="16" y="12" width="98" height="106" rx="2" fill="#e5ecf2"/><path d="M65 12V118M16 64H114" stroke="#98a1ab" stroke-width="3"/><rect x="226" y="42" width="86" height="6" fill="#86776a"/><rect x="234" y="22" width="10" height="20" fill="#6a8799"/><rect x="248" y="27" width="8" height="15" fill="#ad7a5b"/><rect x="260" y="20" width="13" height="22" fill="#c8b48c"/><ellipse cx="284" cy="130" rx="22" ry="36" fill="#5d885b"/><rect x="273" y="150" width="22" height="30" fill="#796a5b"/>',
+  cafe: '<rect width="320" height="180" fill="#9a7154"/><rect y="122" width="320" height="58" fill="#6c4c36"/><circle cx="58" cy="42" r="14" fill="#ffd38c"/><circle cx="262" cy="34" r="12" fill="#ffd38c"/><path d="M58 0V28M262 0V22" stroke="#3a2a1f" stroke-width="2"/><rect x="212" y="72" width="94" height="5" fill="#4c3323"/><rect x="218" y="53" width="14" height="19" fill="#e8e0d3"/><rect x="238" y="57" width="12" height="15" fill="#c66b4a"/><rect x="256" y="51" width="16" height="21" fill="#e8e0d3"/><rect x="12" y="72" width="72" height="44" rx="3" fill="#3e593a"/>',
+  modern: '<rect width="320" height="180" fill="#8396a9"/><rect width="118" height="180" fill="#6c7e92"/><rect x="204" y="24" width="98" height="70" rx="4" fill="#c3cfdb"/><rect x="212" y="32" width="82" height="54" fill="#a8b8c8"/><ellipse cx="40" cy="126" rx="26" ry="42" fill="#4e795a"/><rect x="28" y="150" width="24" height="30" fill="#d7d1c7"/>',
+};
+const HAIR = {
+  short: { back: '', front: 'M128 80 C124 52 140 38 161 38 C183 38 197 52 193 80 C190 66 184 58 172 55 C160 60 142 58 132 68 Z' },
+  bob: { back: 'M123 82 C119 50 139 35 160 35 C182 35 202 50 197 84 C198 102 197 114 192 121 L128 121 C123 112 122 100 123 82 Z',
+    front: 'M128 78 C127 52 143 40 162 40 C182 41 195 53 192 80 C186 63 174 57 163 58 C151 62 137 66 128 78 Z' },
+  long: { back: 'M121 84 C116 47 139 33 160 33 C183 33 204 48 199 86 C201 118 206 140 210 158 L110 158 C114 140 120 118 121 84 Z',
+    front: 'M128 76 C129 50 145 40 162 40 C181 41 194 53 192 78 C182 60 166 54 154 57 C143 60 134 66 128 76 Z' },
+};
+function shade(hex, f) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [n >> 16, (n >> 8) & 255, n & 255].map((x) => clamp(Math.round(x * f), 0, 255));
+  return '#' + ((1 << 24) | (c[0] << 16) | (c[1] << 8) | c[2]).toString(16).slice(1);
+}
+let uidN = 0;
+function avatarSVG(look) {
+  const u = ++uidN, skin = look.skin, sk2 = shade(skin, 0.86), h = HAIR[look.hair] || HAIR.short;
+  return `<svg class="avatar" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs><filter id="bl${u}" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="3.5"/></filter></defs>
+<g filter="url(#bl${u})" transform="translate(-12 -7) scale(1.08)">${BG[look.bg] || BG.office}</g>
+<g class="av-figure">
+${h.back ? `<path d="${h.back}" fill="${look.hairColor}"/>` : ''}
+<path d="M148 104 L148 140 L172 140 L172 104 Z" fill="${sk2}"/>
+<path d="M74 180 C78 152 104 137 160 135 C216 137 242 152 246 180 Z" fill="${look.suit}"/>
+<path d="M142 136 L160 166 L178 136 Z" fill="${look.shirt}"/>
+${look.tie ? `<path d="M156 141 L164 141 L167 168 L160 177 L153 168 Z" fill="${look.tie}"/>` : ''}
+<path d="M141 136 L158 170 L150 180 L128 141 Z M179 136 L162 170 L170 180 L192 141 Z" fill="${shade(look.suit, 0.8)}"/>
+<g class="av-head">
+<ellipse cx="129" cy="84" rx="5" ry="8" fill="${sk2}"/><ellipse cx="191" cy="84" rx="5" ry="8" fill="${sk2}"/>
+<ellipse cx="160" cy="80" rx="31" ry="37" fill="${skin}"/>
+<path d="${h.front}" fill="${look.hairColor}"/>
+<ellipse class="cheek" cx="141" cy="95" rx="6" ry="3" fill="#e57f73" opacity="0"/><ellipse class="cheek" cx="179" cy="95" rx="6" ry="3" fill="#e57f73" opacity="0"/>
+<path class="brow-l" d="M140 69 Q147 66 154 69" fill="none" stroke="${look.hairColor}" stroke-width="2.6" stroke-linecap="round"/>
+<path class="brow-r" d="M166 69 Q173 66 180 69" fill="none" stroke="${look.hairColor}" stroke-width="2.6" stroke-linecap="round"/>
+<g class="eyes"><ellipse cx="147" cy="80" rx="3" ry="3.6" fill="#221f1e"/><ellipse cx="173" cy="80" rx="3" ry="3.6" fill="#221f1e"/></g>
+${look.glasses ? '<g fill="none" stroke="#2b2b30" stroke-width="1.6"><rect x="137.5" y="73" width="19" height="14" rx="4.5"/><rect x="163.5" y="73" width="19" height="14" rx="4.5"/><path d="M156.5 79 Q160 77 163.5 79M137.5 78 L130 76M182.5 78 L190 76"/></g>' : ''}
+<path d="M160 84 Q157.5 93 161 95" fill="none" stroke="${sk2}" stroke-width="1.6" stroke-linecap="round"/>
+<path class="mouth" d="M152 104 Q160 105 168 104 Q160 106 152 104 Z" fill="#7a3530" stroke="#5c2722" stroke-width="1.2" stroke-linejoin="round"/>
+</g></g></svg>`;
+}
+class Face {
+  constructor(svg) {
+    this.svg = svg; this.mood = 50; this.open = 0; this.timer = null;
+    this.bl = svg.querySelector('.brow-l'); this.br = svg.querySelector('.brow-r');
+    this.mouth = svg.querySelector('.mouth'); this.cheeks = svg.querySelectorAll('.cheek');
+    this.render();
+  }
+  setMood(v) { this.mood = v; this.render(); }
+  render() {
+    const t = (this.mood - 50) / 50;
+    const iy = 69 + (t < 0 ? -t * 3 : -t * 1.5), oy = 69 - t, cy = 66 - t * 1.5;
+    this.bl.setAttribute('d', `M140 ${oy.toFixed(1)} Q147 ${cy.toFixed(1)} 154 ${iy.toFixed(1)}`);
+    this.br.setAttribute('d', `M166 ${iy.toFixed(1)} Q173 ${cy.toFixed(1)} 180 ${oy.toFixed(1)}`);
+    const sm = t * 3.2, o = this.open;
+    const corner = 104 - sm * 0.7, up = 104 + sm * 0.9 - o * 0.3, low = 105.2 + sm * 0.9 + o * 2.6;
+    this.mouth.setAttribute('d', `M152 ${corner.toFixed(1)} Q160 ${up.toFixed(1)} 168 ${corner.toFixed(1)} Q160 ${low.toFixed(1)} 152 ${corner.toFixed(1)} Z`);
+    const ch = t > 0.4 ? ((t - 0.4) * 0.6).toFixed(2) : '0';
+    this.cheeks.forEach((c) => c.setAttribute('opacity', ch));
+  }
+  talk(on) {
+    if (on) {
+      if (this.timer) return;
+      this.timer = setInterval(() => { this.open = Math.random() < 0.18 ? 0 : 0.8 + Math.random() * 3.4; this.render(); }, 95);
+    } else {
+      clearInterval(this.timer); this.timer = null; this.open = 0; this.render();
+    }
+  }
+}
+
+const Av3D = {
+  // Demo build: illustrated customer only. (The 3D avatar was slow to load and
+  // its sample assets are non-commercial, so it is disabled for the public demo.)
+  head: null, ready: false, token: 0,
+  async load() { return false; },
+  hide() {}, pause() {}, speaking() {}, sentence() {}, listen() {}, setMood() {},
+};
+
+/* Japanese lip movement: reads vowels from the kana in each line and times them to the voice.
+   Kanji have no reading here, so they get two plausible mouth shapes each. The voice's word-boundary
+   events (when the browser sends them) re-sync the timing as it speaks. */
+const VISEMES = ['aa', 'E', 'I', 'O', 'U', 'PP', 'nn'];
+const VOW = ['aa', 'I', 'U', 'E', 'O'];
+const KANA_V = {};
+Object.entries({
+  aa: 'あかさたなはまやらわがざだばぱ', I: 'いきしちにひみりぎじぢびぴ', U: 'うくすつぬふむゆるぐずづぶぷゔ',
+  E: 'えけせてねへめれげぜでべぺ', O: 'おこそとのほもよろをごぞどぼぽ',
+}).forEach(([v, s]) => { for (const c of s) KANA_V[c] = v; });
+const SMALL_V = { 'ゃ': 'aa', 'ゅ': 'U', 'ょ': 'O', 'ぁ': 'aa', 'ぃ': 'I', 'ぅ': 'U', 'ぇ': 'E', 'ぉ': 'O' };
+const LIP_CLOSE = new Set('まみむめもばびぶべぼぱぴぷぺぽ');
+function lipTimeline(text) {
+  const MORA = 120;
+  const segs = [], charStart = new Array(text.length + 1).fill(0);
+  let t = 0, prev = 'aa';
+  const push = (v, d) => { segs.push({ v, t0: t, t1: t + d }); t += d; if (v !== 'sil' && v !== 'PP') prev = v; };
+  for (let i = 0; i < text.length; i++) {
+    charStart[i] = t;
+    let c = text[i];
+    const code = c.charCodeAt(0);
+    if (code >= 0x30a1 && code <= 0x30f6) c = String.fromCharCode(code - 0x60); // katakana -> hiragana
+    if (c === 'ー') { push(prev, MORA); continue; }
+    if (SMALL_V[c]) { const last = segs[segs.length - 1]; if (last && last.v !== 'sil') { last.v = SMALL_V[c]; prev = last.v; } continue; }
+    if (c === 'っ') { push('sil', MORA * 0.8); continue; }
+    if (c === 'ん') { push('nn', MORA); continue; }
+    if (KANA_V[c]) {
+      if (LIP_CLOSE.has(c)) { push('PP', MORA * 0.35); push(KANA_V[c], MORA * 0.7); } else push(KANA_V[c], MORA);
+      continue;
+    }
+    if (/[㐀-鿿々〆]/.test(c)) { push(VOW[code % 5], MORA); push(VOW[(code >> 3) % 5], MORA * 0.9); continue; }
+    if (/[A-Za-z0-9０-９Ａ-Ｚａ-ｚ]/.test(c)) { push(VOW[code % 5], MORA * 0.9); continue; }
+    if (/[、，,・]/.test(c)) { push('sil', 220); continue; }
+    if (/[。．！？!?\n]/.test(c)) { push('sil', 360); continue; }
+  }
+  charStart[text.length] = t;
+  return { segs, charStart, total: t };
+}
+const Lip = {
+  active: false, tl: null, t0: 0, sync: null, rate: 1, idx: 0, cur: {}, applied: false,
+  start(text) {
+    this.tl = lipTimeline(text); this.t0 = performance.now(); this.sync = null; this.rate = 1; this.idx = 0; this.active = true;
+    Av3D.sentence();
+  },
+  boundary(ci) {
+    if (!this.active || !this.tl) return;
+    const now = performance.now();
+    const tlPos = this.tl.charStart[Math.min(Math.max(ci, 0), this.tl.charStart.length - 1)];
+    const real = now - this.t0;
+    if (real > 300 && tlPos > 0) this.rate = clamp(tlPos / real, 0.6, 1.7);
+    this.sync = { tl: tlPos, at: now };
+  },
+  stop() { this.active = false; },
+  tick(dt) {
+    const head = Av3D.head;
+    if (!head || !Av3D.ready || !head.mtAvatar) return;
+    const now = performance.now();
+    const target = {};
+    if (this.active && this.tl) {
+      const pos = this.sync ? this.sync.tl + (now - this.sync.at) * this.rate : (now - this.t0) * this.rate;
+      const segs = this.tl.segs;
+      if (this.idx >= segs.length || (segs[this.idx] && pos < segs[this.idx].t0)) this.idx = 0;
+      while (this.idx < segs.length && segs[this.idx].t1 <= pos) this.idx++;
+      const seg = segs[this.idx];
+      if (seg && pos >= seg.t0) {
+        if (seg.v !== 'sil') {
+          const f = clamp((pos - seg.t0) / (seg.t1 - seg.t0), 0, 1);
+          target[seg.v] = (seg.v === 'PP' ? 1 : seg.v === 'nn' ? 0.55 : 0.85) * Math.pow(Math.sin(Math.PI * f), 0.5);
+        }
+      } else if (!seg && pos >= this.tl.total) {
+        // The voice is still going past our estimate: keep a gentle, generic mouth movement.
+        target[VOW[Math.floor(now / 130) % 5]] = 0.35 + 0.25 * Math.sin(now / 60);
+      }
+    }
+    let any = false;
+    const k1 = Math.min(1, (dt || 33) / 55);
+    for (const k of VISEMES) {
+      const c = this.cur[k] || 0;
+      const nv = c + ((target[k] || 0) - c) * k1;
+      this.cur[k] = nv;
+      if (nv > 0.01) any = true;
+      const m = head.mtAvatar['viseme_' + k];
+      if (m && (this.active || nv > 0.01)) Object.assign(m, { realtime: nv, needsUpdate: true });
+    }
+    if (this.active || any) this.applied = true;
+    else if (this.applied) { // hand the mouth back to the avatar's own animation
+      for (const k of VISEMES) { const m = head.mtAvatar['viseme_' + k]; if (m) Object.assign(m, { realtime: null, needsUpdate: true }); }
+      this.applied = false;
+    }
+  },
+};
+
+// For checking the avatar and microphone state from the browser console.
+window.__roleplay = { Av3D, Lip, get Mic() { return Mic; }, get Level() { return Level; } };
+
+/* ---------- Gemini API (free tier) ---------- */
+const HP_LS = 'ai-roleplay-headphones';
+const PROXY = 'api'; // same-origin Cloudflare Pages Function: the API key never reaches the browser
+const FALLBACK = 'demo';
+const AI = { key: 'demo', chatModel: 'demo-chat', scoreModel: 'demo-score', state: 'none' };
+const DEMO_LIMIT_SEC = 180; // 3-minute demo
+
+function aiError(status, msg) {
+  let code = 'upstream_error';
+  if (status === 429) code = 'rate_limited';
+  else if (status === 401 || status === 403 || (status === 400 && /api.?key/i.test(msg || ''))) code = 'bad_key';
+  else if (status === 404) code = 'model_not_found';
+  return { code, status, message: msg || '' };
+}
+async function readErr(res) { try { return (await res.json()).error?.message || ''; } catch (e) { return ''; } }
+async function checkModel() {
+  let res;
+  try { res = await fetch(PROXY + '?action=status', { cache: 'no-store' }); }
+  catch (e) { throw { code: 'network' }; }
+  if (!res.ok) throw aiError(res.status, await readErr(res));
+  const j = await res.json().catch(() => ({}));
+  if (!j.ready) throw { code: 'not_ready' };
+}
+// idleMs: give up when nothing arrives for this long (a thinking model can go quiet, or the free tier can stall).
+async function gemini({ model, system, contents, json, signal, onText, maxTokens, idleMs = 60000, thinkingLevel }) {
+  const body = { purpose: json ? 'score' : 'chat', contents, generationConfig: { temperature: json ? 0.3 : 0.9, maxOutputTokens: maxTokens || 1024 } };
+  if (system) body.systemInstruction = { parts: [{ text: system }] };
+  if (json) body.generationConfig.responseMimeType = 'application/json';
+  if (thinkingLevel) body.generationConfig.thinkingConfig = { thinkingLevel };
+  const ctl = new AbortController();
+  let timedOut = false, idleT = null, reader = null;
+  // Abort the request and also release a pending read, so nothing can hang.
+  const halt = () => { ctl.abort(); if (reader) { try { reader.cancel().catch(() => {}); } catch (e) { /* ignore */ } } };
+  const onOuterAbort = () => halt();
+  if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', onOuterAbort); }
+  const arm = () => { clearTimeout(idleT); idleT = setTimeout(() => { timedOut = true; halt(); }, idleMs); };
+  const fail = (e, text) => ({ code: timedOut ? 'timeout' : e && e.name === 'AbortError' ? 'cancelled' : 'network', text });
+  arm();
+  try {
+    let res;
+    try {
+      res = await fetch(PROXY + '?action=generate', {
+        method: 'POST', signal: ctl.signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+    } catch (e) { throw fail(e); }
+    if (!res.ok) {
+      const msg = await readErr(res);
+      // Older models reject thinkingConfig: retry once without it.
+      if (thinkingLevel && res.status === 400 && /think/i.test(msg)) {
+        return gemini({ model, system, contents, json, signal, onText, maxTokens, idleMs });
+      }
+      throw aiError(res.status, msg);
+    }
+    reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '', text = '', blocked = false;
+    const eat = (line) => {
+      line = line.trim();
+      if (!line.startsWith('data:')) return;
+      const data = line.slice(5).trim();
+      if (!data || data === '[DONE]') return;
+      let j; try { j = JSON.parse(data); } catch (e) { return; }
+      if (j.promptFeedback && j.promptFeedback.blockReason) blocked = true;
+      const c = j.candidates && j.candidates[0];
+      if (c && /SAFETY|PROHIBITED|BLOCKLIST/.test(c.finishReason || '')) blocked = true;
+      let add = '';
+      for (const p of (c && c.content && c.content.parts) || []) { if (!p.thought && typeof p.text === 'string') add += p.text; }
+      if (add) { text += add; onText && onText({ text, delta: add }); }
+    };
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        arm();
+        buf += dec.decode(value, { stream: true });
+        let i;
+        while ((i = buf.indexOf('\n')) >= 0) { eat(buf.slice(0, i)); buf = buf.slice(i + 1); }
+      }
+      buf += dec.decode();
+      if (buf.trim()) eat(buf); // the last event may arrive without a trailing newline
+    } catch (e) { throw fail(e, text); }
+    if (timedOut || ctl.signal.aborted) throw fail({ name: 'AbortError' }, text);
+    if (!text.trim()) throw { code: blocked ? 'refused' : 'empty' };
+    return text;
+  } finally {
+    clearTimeout(idleT);
+    if (signal) signal.removeEventListener('abort', onOuterAbort);
+  }
+}
+async function geminiFB(opts) {
+  // The proxy chooses the model server-side, so there is no client-side
+  // model fallback (a retry would just repeat the same request and add delay).
+  return gemini(opts);
+}
+/* ---------- Gemini voice (text-to-speech, free tier) ----------
+   One request per customer reply. The speaking style is described in plain Japanese.
+   On failure or rate limit it falls back to the browser voice for a while. */
+const API_ROOT = ''; // demo: Gemini TTS route removed
+const TTS = {
+  models: ['gemini-3.8-flash-tts', 'gemini-3.8-flash-lite-tts'],
+  cooldownUntil: 0, noted: false, _ctx: null,
+  usable() { return false; }, // demo: browser voice only (faster, and no extra API route)
+  ctx() {
+    const c = (Av3D.ready && Av3D.head && Av3D.head.audioCtx) || this._ctx || (this._ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if (c.state === 'suspended') c.resume().catch(() => {});
+    return c;
+  },
+  style() {
+    const p = S.persona, v = S.interest;
+    const mood = v < 35 ? '気乗りしない様子で、少し素っ気なく' : v >= 65 ? '前向きで、声が少し明るく' : '落ち着いて';
+    return `日本人の${p.age ? p.age + '歳の' : ''}${p.role}が、オンライン会議で取引先の営業担当者と話している。`
+      + `原稿を読み上げる調子ではなく、普段の会話の自然な抑揚と間で。${p.ttsStyle || ''}、${mood}話す。`;
+  },
+  async synth(text, signal) {
+    let last;
+    for (const model of this.models) {
+      try { return await this.once(model, text, signal); }
+      catch (e) {
+        last = e;
+        if (e && e.code === 'cancelled') throw e;
+        if (!(e && ['rate_limited', 'model_not_found', 'upstream_error', 'empty'].includes(e.code))) throw e;
+      }
+    }
+    if (last && last.code === 'rate_limited') this.cooldownUntil = Date.now() + 60000;
+    throw last;
+  },
+  async once(model, text, signal) {
+    const body = {
+      model,
+      input: [{ type: 'user_input', content: [{ type: 'text', text, annotations: [{ type: 'speech_metadata', style: this.style() }] }] }],
+      response_format: { type: 'audio' },
+      generation_config: { speech_config: [{ voice: S.persona.ttsVoice || 'Kore' }] },
+    };
+    let res;
+    try {
+      throw { code: 'empty' };
+    } catch (e) { throw { code: e && e.name === 'AbortError' ? 'cancelled' : 'network' }; }
+    if (!res.ok) throw aiError(res.status, await readErr(res));
+    let j;
+    try { j = await res.json(); } catch (e) { throw { code: e && e.name === 'AbortError' ? 'cancelled' : 'empty' }; }
+    const audio = (j.steps || []).filter((s) => s.type === 'model_output')
+      .flatMap((s) => s.content || []).filter((c) => c.type === 'audio' && c.data).pop();
+    if (!audio) throw { code: 'empty' };
+    const bin = atob(audio.data), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return decodeSpeech(this.ctx(), bytes);
+  },
+  noteFallback(e) {
+    if (this.noted) return;
+    this.noted = true;
+    addSys(e && e.code === 'rate_limited'
+      ? 'Geminiの声の無料枠の上限に達したため、しばらくブラウザの声で話します。'
+      : 'Geminiの声を作れなかったため、ブラウザの声で話します。', { err: true });
+  },
+};
+async function decodeSpeech(ctx, bytes) {
+  const isWav = bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46; // "RIFF"
+  if (isWav) return ctx.decodeAudioData(bytes.buffer.slice(0));
+  // Raw 16-bit little-endian PCM, 24 kHz mono.
+  const n = Math.floor(bytes.length / 2), buf = ctx.createBuffer(1, n, 24000), ch = buf.getChannelData(0);
+  const dv = new DataView(bytes.buffer);
+  for (let i = 0; i < n; i++) ch[i] = dv.getInt16(i * 2, true) / 32768;
+  return buf;
+}
+/* Mouth shapes for a finished audio clip: the kana-based timeline, stretched to the real speech
+   (leading and trailing silence trimmed). */
+function audioLip(text, buf) {
+  const d = buf.getChannelData(0), sr = buf.sampleRate, thr = 0.02;
+  let a = 0; while (a < d.length && Math.abs(d[a]) < thr) a += 64;
+  let b = d.length - 1; while (b > a && Math.abs(d[b]) < thr) b -= 64;
+  const lead = (a / sr) * 1000, span = Math.max(200, ((b - a) / sr) * 1000);
+  const tl = lipTimeline(text), k = span / Math.max(1, tl.total);
+  const visemes = [], vtimes = [], vdurations = [];
+  for (const s of tl.segs) {
+    if (s.v === 'sil') continue;
+    visemes.push(s.v); vtimes.push(Math.round(lead + s.t0 * k)); vdurations.push(Math.max(40, Math.round((s.t1 - s.t0) * k)));
+  }
+  return { lead: Math.round(lead), span: Math.round(span), visemes, vtimes, vdurations };
+}
+
+function errCopy(e) {
+  return ({
+    rate_limited: 'デモの利用制限に達しました。少し時間をおいてから、もう一度お試しください。',
+    bad_key: 'AIに接続できませんでした。時間をおいてからお試しください。',
+    network: '通信できませんでした。インターネット接続を確認してください。',
+    refused: 'この内容には応答できませんでした。言い方を変えてください。',
+    empty: '応答が空でした。もう一度話しかけてください。',
+    invalid_json: '採点結果を読み取れませんでした。もう一度お試しください。',
+    model_not_found: 'AIの準備ができていません。時間をおいてからお試しください。',
+    timeout: 'AIから応答がありませんでした。混み合っている可能性があります。少し待ってからもう一度お試しください。',
+  })[e && e.code] || '接続が途切れました。もう一度お試しください。';
+}
+
+/* ---------- State ---------- */
+const S = {
+  personaId: 'minato', difficulty: 'normal', persona: null,
+  seller: { name: '山田', company: '' }, goal: '',
+  turns: [], interest: 30, startAt: 0, endAt: 0, timerId: null, uiTimer: null,
+  busy: false, ctl: null, hintBusy: false, ended: true, bargeIn: false,
+  cc: true, voice: true, chat: true, layout: 'speaker', headphones: false, cam: null,
+  scoreCtl: null, result: null,
+};
+let face = null;
+
+/* ---------- Voice output: speaks each sentence as soon as it arrives ---------- */
+const ttsSupported = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+if (ttsSupported) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); } catch (e) { /* ignore */ } }
+function pickVoice() {
+  let vs = [];
+  try { vs = speechSynthesis.getVoices().filter((v) => /^ja/i.test(v.lang)); } catch (e) { return null; }
+  if (!vs.length) return null;
+  const want = S.persona && S.persona.gender === 'f' ? /Nanami|Ayumi|Haruka|Kyoko|O-ren|Mayu|Shiori|Aoi/i : /Keita|Ichiro|Otoya|Hattori|Daichi|Naoki/i;
+  const natural = /Natural|Online|Neural/i;
+  return vs.find((v) => natural.test(v.name) && want.test(v.name)) || vs.find((v) => want.test(v.name))
+    || vs.find((v) => natural.test(v.name)) || vs.find((v) => /Google/.test(v.name)) || vs[0];
+}
+function setCustTalking(on) { face && face.talk(on); Av3D.speaking(on); $('#custTile').classList.toggle('speaking', on); }
+const Speaker = {
+  gen: 0, pending: 0, streamDone: true, active: false, utts: [], fakeEnd: 0,
+  begin() { this.reset(); this.streamDone = false; },
+  reset() {
+    this.gen++; this.pending = 0; this.utts = []; this.fakeEnd = 0; this.streamDone = true;
+    Lip.stop();
+    if (ttsSupported) { try { speechSynthesis.cancel(); } catch (e) { /* ignore */ } }
+    if (this.src) { try { this.src.onended = null; this.src.stop(); } catch (e) { /* ignore */ } this.src = null; }
+    if (Av3D.ready && Av3D.head && this.headBusy) { try { Av3D.head.stopSpeaking(); } catch (e) { /* ignore */ } }
+    this.headBusy = false;
+    this.setActive(false);
+  },
+  push(text) {
+    text = text.trim();
+    if (!text) return;
+    const g = this.gen, voice = S.voice && ttsSupported ? pickVoice() : null;
+    this.pending++; this.setActive(true);
+    let finished = false;
+    const done = () => { if (finished || g !== this.gen) return; finished = true; Lip.stop(); this.pending--; this.check(); };
+    if (!voice) { // no voice available: still move the mouth for about as long as the line would take
+      const now = Date.now(), startAt = Math.max(this.fakeEnd, now);
+      this.fakeEnd = startAt + 300 + text.length * 110;
+      setTimeout(() => { if (g === this.gen && !finished) Lip.start(text); }, startAt - now);
+      setTimeout(done, this.fakeEnd - now);
+      return;
+    }
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP'; u.voice = voice; u.rate = 1.1; u.pitch = S.persona.gender === 'f' ? 1.1 : 0.92;
+      u.onstart = () => { if (g === this.gen) Lip.start(text); };
+      u.onboundary = (ev) => { if (g === this.gen) Lip.boundary(ev.charIndex); };
+      u.onend = done;
+      // If the voice fails (not a deliberate stop), keep the mouth moving for the line's length instead.
+      u.onerror = (ev) => { if (ev.error === 'interrupted' || ev.error === 'canceled') done(); else setTimeout(done, 300 + text.length * 110); };
+      this.utts.push(u);
+      speechSynthesis.speak(u);
+      setTimeout(done, 4000 + text.length * 260); // safety net if the browser never reports the end
+    } catch (e) { done(); }
+  },
+  // Speak a whole reply with the Gemini voice. onStart runs when the audio actually begins
+  // (or right before falling back to the browser voice). Returns false if it was cancelled.
+  async speakGemini(text, onStart, signal) {
+    const g = this.gen;
+    let buf = null, err = null;
+    try { buf = await TTS.synth(text, signal); } catch (e) { err = e; }
+    if (g !== this.gen || (signal && signal.aborted) || (err && err.code === 'cancelled')) return false;
+    if (!buf) { TTS.noteFallback(err); onStart(); this.push(text); return true; }
+    onStart();
+    this.pending++; this.setActive(true);
+    let finished = false;
+    const done = () => { if (finished || g !== this.gen) return; finished = true; this.headBusy = false; this.src = null; this.pending--; this.check(); };
+    setTimeout(done, buf.duration * 1000 + 5000); // safety net
+    if (Av3D.ready && Av3D.head) {
+      try {
+        const lip = audioLip(text, buf);
+        if (Av3D.head.audioCtx && Av3D.head.audioCtx.state === 'suspended') Av3D.head.audioCtx.resume().catch(() => {});
+        this.headBusy = true;
+        Av3D.head.speakAudio({
+          audio: buf, words: [text], wtimes: [lip.lead], wdurations: [lip.span],
+          visemes: lip.visemes, vtimes: lip.vtimes, vdurations: lip.vdurations,
+        }, { lipsyncLang: 'en' });
+        Av3D.head.speakMarker(done);
+        Av3D.sentence();
+        return true;
+      } catch (e) { console.warn('3D speech failed, playing audio directly', e); this.headBusy = false; }
+    }
+    try {
+      const ctx = TTS.ctx(), src = ctx.createBufferSource();
+      src.buffer = buf; src.connect(ctx.destination); src.onended = done;
+      this.src = src; src.start();
+    } catch (e) { done(); }
+    return true;
+  },
+  finish() { this.streamDone = true; this.check(); },
+  check() { if (this.pending <= 0 && this.streamDone) this.setActive(false); },
+  setActive(on) {
+    if (this.active === on) return;
+    this.active = on;
+    setCustTalking(on);
+    syncMicToTurn();
+    if (!on) captionLater();
+  },
+};
+
+/* ---------- Voice input: browser speech recognition (Chrome / Edge) ---------- */
+const SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+const Mic = {
+  enabled: false, paused: false, rec: null, finalBuf: '', interim: '', timer: null, restartT: null, lastErr: '',
+  // Starts paused; syncMicToTurn() opens it only when it's your turn.
+  start() { if (!SRClass) return; this.enabled = true; this.lastErr = ''; this.paused = true; micUI(); syncMicToTurn(); },
+  stop() { this.enabled = false; this.kill(); this.clearBuf(); micUI(); },
+  pause() { this.paused = true; this.kill(); },
+  resume() { this.paused = false; this.run(); },
+  kill() {
+    clearTimeout(this.restartT);
+    if (this.rec) { const r = this.rec; this.rec = null; r.onend = r.onresult = r.onerror = null; try { r.abort(); } catch (e) { /* ignore */ } }
+  },
+  run() {
+    if (!SRClass || !this.enabled || this.paused || this.rec || S.ended) return;
+    const r = new SRClass();
+    r.lang = 'ja-JP'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
+    r.onresult = (e) => this.onResult(e);
+    r.onerror = (e) => this.onError(e);
+    r.onend = () => { if (this.rec === r) { this.rec = null; this.restartT = setTimeout(() => this.run(), 250); } };
+    this.rec = r;
+    try { r.start(); } catch (e) { this.rec = null; }
+  },
+  onResult(e) {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const res = e.results[i];
+      if (res.isFinal) this.finalBuf += res[0].transcript; else interim += res[0].transcript;
+    }
+    this.interim = interim;
+    const said = (this.finalBuf + this.interim).trim();
+    if (!said) return;
+    userSpeaking(said);
+    this.lastResultAt = performance.now();
+    this.wait = endOfTurnWait(said, !!this.interim);
+    if (!this.loop) { this.loop = setInterval(() => this.check(), 100); }
+    this.check();
+  },
+  /* Sends only after real silence: the countdown restarts whenever the mic hears your voice
+     (Level.lastVoiceAt) or new words are recognized, so a pause to breathe or think doesn't end your turn. */
+  check() {
+    const text = (this.finalBuf + this.interim).trim();
+    if (!text) { if (!this.sendWhenFree) this.stopLoop(); return; }
+    if (this.sendWhenFree) { if (performance.now() >= this.passAt) this.commit(); return; }
+    if (S.manual) { setWaitBar(null); return; }
+    const quietSince = Math.max(this.lastResultAt || 0, Level.running ? Level.lastVoiceAt : 0);
+    const left = this.wait - (performance.now() - quietSince);
+    setWaitBar(Math.max(0, left) / this.wait);
+    if (left <= 0) this.commit();
+  },
+  stopLoop() { clearInterval(this.loop); this.loop = null; },
+  // Pass the turn. Waits a moment so the last words still being recognized are included.
+  commitNow() {
+    this.sendWhenFree = true;
+    this.passAt = performance.now() + 450;
+    if (!this.loop) this.loop = setInterval(() => this.check(), 100);
+    clearTimeout(this.noSpeechT);
+    this.noSpeechT = setTimeout(() => {
+      if (this.sendWhenFree && !(this.finalBuf + this.interim).trim()) {
+        this.sendWhenFree = false; this.stopLoop();
+        toast('声が聞き取れませんでした。もう一度話すか、チャット欄に入力してください');
+      }
+    }, 1800);
+  },
+  commit() {
+    const text = (this.finalBuf + this.interim).trim();
+    if (!text) return;
+    if (!isYourTurn()) return; // the check loop tries again
+    this.clearBuf();
+    sendText(text);
+  },
+  clearBuf() {
+    this.stopLoop(); clearTimeout(this.noSpeechT);
+    this.sendWhenFree = false; this.finalBuf = ''; this.interim = ''; $('#heard').hidden = true;
+  },
+  onError(e) {
+    const err = e.error;
+    if (err === 'not-allowed' || err === 'service-not-allowed') {
+      this.enabled = false; this.kill(); micUI();
+      addSys('マイクが使えません。アドレスバー左のアイコンからマイクを許可し、マイクボタンを押し直してください。', { err: true });
+    } else if (err === 'audio-capture') {
+      this.enabled = false; this.kill(); micUI();
+      addSys('マイクが見つかりません。マイクの接続を確認してください。', { err: true });
+    } else if (err === 'network' && this.lastErr !== 'network') {
+      addSys('音声認識サービスに接続できません。インターネット接続を確認してください。', { err: true });
+    }
+    this.lastErr = err;
+  },
+};
+/* How long a silence means "I'm done talking" (counted from when your voice actually stops).
+   Japanese speech-recognition text has no punctuation, so the ending of what was said decides:
+   a finished sentence waits a little less, a sentence cut off mid-way (〜て、〜けど、えーと…) waits longer. */
+const END_DONE = /(です|ます|でした|ました|ません|でしょう|ですか|ますか|でしょうか|ください|ですね|ますね|ですよね|ますよね|ございます|お願いします|お願いいたします|いかがですか|いかがでしょう|かしこまりました|承知しました|はい|ええ|ありがとうございました)[。？?！!]?$/;
+const END_MID = /(て|で|が|けど|けれど|けれども|ので|から|と|し|は|を|に|も|の|や|って|たら|ば|ながら|あの|あのー|えー|えーと|えっと|まあ|その|ですが|ますが|ですけど|ますけど|ですので|ますので|まして|でして|ちなみに|それで|なので)[、,]?$/;
+function endOfTurnWait(text, interim) {
+  const base = S.pauseMs || 2000;
+  const t = text.trim();
+  if (END_MID.test(t)) return Math.round(base * 1.5);
+  if (END_DONE.test(t) && !interim) return Math.max(1000, Math.round(base * 0.75));
+  return interim ? base + 300 : base;
+}
+function setWaitBar(frac) { // frac: 1 = just stopped talking, 0 = about to send, null = manual mode
+  const bar = $('#heard .wait');
+  if (!bar) return;
+  bar.hidden = frac === null;
+  if (frac !== null) bar.style.transform = `scaleX(${frac.toFixed(3)})`;
+}
+$('#heard').addEventListener('click', (e) => { if (e.target.closest('.send-now')) passTurn(); });
+document.addEventListener('keydown', (e) => { // Enter passes the turn (inside the chat box, Enter sends the typed text)
+  if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229 || document.activeElement === $('#msg')) return;
+  if (S.ended || $('#meeting').hidden) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'SELECT' || (tag === 'BUTTON' && document.activeElement.id !== 'passBtn')) return;
+  e.preventDefault(); passTurn();
+});
+
+function userSpeaking(said) {
+  const h = $('#heard');
+  h.innerHTML = '<span class="who">あなた</span><span class="said"></span>'
+    + '<button type="button" class="send-now">相手に渡す<small>Enter</small></button><span class="wait"></span>';
+  h.querySelector('.said').textContent = said.length > 80 ? '…' + said.slice(-80) : said;
+  h.hidden = false;
+  Av3D.listen();
+}
+
+/* Turn-taking: the mic listens only on your turn. While the customer is thinking or speaking
+   it is fully stopped, so nothing you say (or the customer's own voice from the speakers) is picked up. */
+const isYourTurn = () => S.joined && !S.ended && !S.busy && !Speaker.active;
+function syncMicToTurn() {
+  if (!Mic.enabled) return;
+  const open = isYourTurn();
+  if (open && Mic.paused) Mic.resume();
+  else if (!open && !Mic.paused) Mic.pause();
+}
+function passTurn() { // the 相手に渡す button / Enter key
+  if (!isYourTurn()) return;
+  if ($('#msg').value.trim()) { sendTyped(); return; } // typed text goes first
+  Mic.commitNow();
+}
+
+/* Mic level bars + speaking border on your own tile */
+// Also works as a simple voice detector: lastVoiceAt is the last moment your voice was above the
+// room's background noise (tracked as noise), so the turn only ends after real silence.
+const Level = {
+  stream: null, ctx: null, timer: 0, running: false, lastVoiceAt: 0, noise: 0.004,
+  async start() {
+    if (this.stream || !navigator.mediaDevices) return true;
+    try { this.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+    catch (e) { return false; }
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const an = this.ctx.createAnalyser(); an.fftSize = 1024;
+      this.ctx.createMediaStreamSource(this.stream).connect(an);
+      const data = new Uint8Array(an.fftSize), bars = [...document.querySelectorAll('#micLevel i')];
+      $('#micLevel').hidden = false;
+      this.noise = 0.004; this.lastVoiceAt = 0;
+      // A timer rather than animation frames, so detection keeps running if the window is behind another one.
+      this.timer = setInterval(() => {
+        an.getByteTimeDomainData(data);
+        let sum = 0; for (const v of data) { const x = (v - 128) / 128; sum += x * x; }
+        const rms = Math.sqrt(sum / data.length);
+        const thr = Math.max(0.012, this.noise * 3);
+        const live = Mic.enabled && !Mic.paused;
+        const voice = rms > thr;
+        if (voice) { if (live) this.lastVoiceAt = performance.now(); }
+        else this.noise = this.noise * 0.97 + rms * 0.03;
+        const lv = Math.min(1, rms * 7);
+        bars.forEach((b, i) => { b.style.height = live ? (3 + lv * 11 * (0.55 + 0.45 * Math.abs(Math.sin(i * 1.7 + performance.now() / 110)))).toFixed(1) + 'px' : '3px'; });
+        $('#selfTile').classList.toggle('speaking', live && voice);
+      }, 50);
+      this.running = true;
+    } catch (e) { /* level display and voice detection are optional */ }
+    return true;
+  },
+  stop() {
+    clearInterval(this.timer); this.running = false;
+    if (this.stream) this.stream.getTracks().forEach((t) => t.stop());
+    this.stream = null;
+    try { this.ctx && this.ctx.close(); } catch (e) { /* ignore */ }
+    this.ctx = null; $('#micLevel').hidden = true; $('#selfTile').classList.remove('speaking');
+  },
+};
+
+const IC_MIC = '<svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+const IC_MIC_OFF = '<svg class="ic" viewBox="0 0 24 24"><path d="M9 9V6a3 3 0 0 1 6 0v5M15 14.5A3 3 0 0 1 9 11"/><path d="M5 11a7 7 0 0 0 11.5 5.4M19 11a7 7 0 0 1-.6 2.8M12 18v3M4 4l16 16"/></svg>';
+function micUI() {
+  const b = $('#tMic');
+  if (!SRClass) { b.disabled = true; b.className = 'tool mute'; b.innerHTML = IC_MIC_OFF + '音声入力なし'; b.title = 'このブラウザは音声入力に対応していません'; }
+  else if (Mic.enabled) { b.className = 'tool live'; b.innerHTML = IC_MIC + 'ミュート'; b.title = 'マイクをミュートする'; }
+  else { b.className = 'tool mute'; b.innerHTML = IC_MIC_OFF + 'ミュート解除'; b.title = 'マイクをオンにする'; }
+  const ni = $('#selfMicIcon');
+  ni.innerHTML = Mic.enabled ? IC_MIC : IC_MIC_OFF;
+  const svg = ni.querySelector('svg'); if (svg && Mic.enabled) svg.classList.add('on');
+}
+$('#tMic').addEventListener('click', async () => {
+  if (S.ended) return;
+  if (Mic.enabled) { Mic.stop(); Level.stop(); }
+  else { await Level.start(); Mic.start(); }
+});
+
+/* ---------- Lobby ---------- */
+function customPersona() {
+  const v = (id) => $(id).value.trim();
+  return {
+    id: 'custom', name: '田中 誠', short: '田中', gender: 'm', age: null,
+    company: v('#cCompany') || 'お客様の会社', role: v('#cRole') || 'ご担当者', industry: v('#cCompany') || '業種未設定',
+    product: v('#cProduct') || '自社商材', productDesc: v('#cDesc') || '（詳細は営業担当者の説明による）',
+    goal: '次回打ち合わせのアポ獲得',
+    personality: v('#cPersona') || '一般的なビジネスパーソン。',
+    situation: '営業担当者から提案を受けている。',
+    hidden: [], startInterest: 35,
+    opener: 'お世話になっております。田中です。本日はよろしくお願いします。',
+    look: CUSTOM_LOOK, av3d: 'avatarsdk', photo: 'hallway',
+    ttsVoice: 'Schedar', ttsStyle: '落ち着いた口調で',
+  };
+}
+function currentPersona() { return S.personaId === 'custom' ? customPersona() : PERSONAS.find((p) => p.id === S.personaId); }
+
+function renderScenarios() {
+  const list = $('#scenarioList');
+  list.innerHTML = PERSONAS.map((p) => `
+    <button type="button" class="sc" role="radio" data-id="${p.id}" aria-checked="${p.id === S.personaId}">
+      <div class="sc-thumb">${avatarSVG(p.look)}</div>
+      <div>
+        <div class="sc-name">${esc(p.name)}<small>${esc(p.company)}／${esc(p.role)}</small></div>
+        <div class="sc-meta">${esc(p.industry)}</div>
+        <span class="sc-product">${esc(p.product)}</span>
+      </div>
+    </button>`).join('') + `
+    <button type="button" class="sc" role="radio" data-id="custom" aria-checked="${S.personaId === 'custom'}">
+      <div class="sc-thumb plus"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      <div>
+        <div class="sc-name">自分で設定する</div>
+        <div class="sc-meta">自社の商材と、想定するお客様の役職や性格を入力して練習します。</div>
+      </div>
+    </button>`;
+  list.querySelectorAll('.sc').forEach((b) => b.addEventListener('click', () => selectPersona(b.dataset.id)));
+}
+function selectPersona(id) {
+  S.personaId = id;
+  document.querySelectorAll('#scenarioList .sc').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.id === id)));
+  $('#customFields').hidden = id !== 'custom';
+  $('#goal').value = currentPersona().goal;
+  prefetchAvatar(currentPersona());
+  renderPreview();
+}
+function renderPreview() {
+  const p = currentPersona();
+  const start = clamp(p.startInterest + DIFF[S.difficulty].delta, 5, 90);
+  $('#preview').innerHTML = avatarSVG(p.look) + `<div class="nameplate"><span>${esc(p.name)}（${esc(p.company)}）</span></div>`;
+  new Face($('#preview .avatar')).setMood(start);
+  $('#brief').innerHTML = `
+    <dt>お客様</dt><dd>${esc(p.company)} ${esc(p.role)} ${esc(p.name)} 様</dd>
+    <dt>業種</dt><dd>${esc(p.industry)}</dd>
+    <dt>商材</dt><dd>${esc(p.product)}</dd>
+    <dt>状況</dt><dd>${esc(p.situation)}</dd>
+    <dt>開始時の関心度</dt><dd class="num">${start} / 100</dd>`;
+  updateStart();
+}
+function updateStart() {
+  const btn = $('#startBtn');
+  const customMissing = S.personaId === 'custom' && (!$('#cProduct').value.trim() || !$('#cRole').value.trim());
+  btn.disabled = AI.state !== 'ready' || customMissing;
+  btn.textContent = AI.state === 'checking' ? 'AIに接続しています…'
+    : AI.state !== 'ready' ? 'AIに接続できると始められます'
+      : customMissing ? '商材名と相手の役職を入力してください' : '商談を開始';
+}
+function setDifficulty(d) {
+  S.difficulty = d;
+  document.querySelectorAll('#diffSeg button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.d === d)));
+  $('#diffNote').textContent = DIFF[d].note;
+  renderPreview();
+}
+document.querySelectorAll('#diffSeg button').forEach((b) => b.addEventListener('click', () => setDifficulty(b.dataset.d)));
+['#cProduct', '#cRole', '#cDesc', '#cCompany', '#cPersona'].forEach((id) => $(id).addEventListener('input', () => { if (S.personaId === 'custom') renderPreview(); }));
+
+/* API key setup */
+
+async function checkDemo() {
+  AI.state = 'checking'; updateStart();
+  try {
+    await checkModel();
+    AI.state = 'ready';
+  } catch (e) {
+    AI.state = 'bad';
+    const b = $('#aiBanner');
+    b.hidden = false; b.className = 'banner warn';
+    b.textContent = 'AIに接続できませんでした。少し時間をおいてから、このページを再読み込みしてください。';
+  }
+  updateStart();
+}
+$('#voiceEngine').addEventListener('change', () => { S.voiceEngine = $('#voiceEngine').value; ls.set('ai-roleplay-voice-engine-v2', S.voiceEngine); });
+function readPauseSetting() {
+  const v = $('#pauseLen').value;
+  S.manual = v === 'manual';
+  S.pauseMs = S.manual ? 2000 : (Number(v) || 2000);
+}
+$('#pauseLen').addEventListener('change', () => { readPauseSetting(); ls.set('ai-roleplay-turn-mode', $('#pauseLen').value); });
+$('#passBtn').addEventListener('click', passTurn);
+
+function renderBanner() {
+  const b = $('#aiBanner');
+  if (!SRClass) {
+    b.hidden = false; b.className = 'banner warn';
+    b.textContent = 'このブラウザは音声入力に対応していません。Google Chrome か Microsoft Edge で開いてください（文字入力だけなら使えます）。';
+  } else { b.hidden = true; }
+}
+
+/* ---------- Saved results ----------
+   Each finished session becomes one record. It is saved automatically to the results folder
+   through server.py, and a copy is kept in this browser as a backup. */
+const HKEY = 'ai-roleplay-history-v1';     // older score-only entries
+const RKEY = 'ai-roleplay-records-v1';     // full records (browser backup)
+let serverRecords = null;                  // null = server not reachable
+let shownRecords = [];
+function loadLocalRecords() { try { return JSON.parse(localStorage.getItem(RKEY) || '[]'); } catch (e) { return []; } }
+function saveLocalRecord(rec) {
+  const list = loadLocalRecords().filter((r) => r.id !== rec.id);
+  list.unshift(rec);
+  ls.set(RKEY, JSON.stringify(list.slice(0, 30)));
+}
+function loadOldHistory() { try { return JSON.parse(localStorage.getItem(HKEY) || '[]'); } catch (e) { return []; } }
+async function fetchServerRecords() { return null; } // demo: browser storage only
+function newId() {
+  const a = new Uint8Array(9);
+  try { crypto.getRandomValues(a); } catch (e) { for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+  return [...a].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+function fmtDate(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+async function renderHistory() {
+  serverRecords = await fetchServerRecords();
+  const byId = new Map();
+  for (const r of [...(serverRecords || []), ...loadLocalRecords()]) {
+    if (r && r.id && r.result && !byId.has(r.id)) byId.set(r.id, r);
+  }
+  shownRecords = [...byId.values()].sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)));
+  const old = loadOldHistory();
+  const rows = shownRecords.map((r, i) => `
+    <li class="has-btn"><button type="button" class="h-row" data-i="${i}" title="レポートを開く">
+      <div><div>${esc(r.persona.company)} ${esc(r.persona.name)}様</div><div class="h-sub">${esc(fmtDate(r.savedAt))}・${esc((DIFF[r.difficulty] || DIFF.normal).label)}・${esc(r.result.outcome)}</div></div>
+      <span class="rank">${esc(rankOf(r.result.total))}</span><span class="h-score">${Number(r.result.total) || 0}</span>
+    </button></li>`).concat(old.map((r) => `
+    <li><div><div>${esc(r.who)}</div><div class="h-sub">${esc(r.date)}・${esc(r.diff)}・${esc(r.outcome)}（点数のみ）</div></div>
+    <span class="rank">${esc(rankOf(r.total))}</span><span class="h-score">${Number(r.total) || 0}</span></li>`));
+  $('#historyList').innerHTML = rows.length ? rows.join('')
+    : '<li class="empty">まだ結果はありません。商談を終えると、ここに自動で保存されます。</li>';
+  $('#historyList').querySelectorAll('.h-row').forEach((b) => b.addEventListener('click', () => openRecord(shownRecords[Number(b.dataset.i)])));
+  $('#historyNote').textContent = serverRecords
+    ? 'クリックするとレポートを開けます。結果はこのブラウザに保存されます。'
+    : 'クリックするとレポートを開けます。結果はこのブラウザに保存されます。';
+}
+function openRecord(rec) {
+  if (!rec) return;
+  showScreen('report');
+  $('#scoring').hidden = true; $('#scoreError').hidden = true;
+  renderReport(rec, { past: true });
+  $('#report').scrollTop = 0;
+}
+
+function buildRecord(r) {
+  const p = S.persona;
+  return {
+    v: 1, id: newId(), savedAt: new Date().toISOString(),
+    persona: { id: p.id, name: p.name, short: p.short, company: p.company, role: p.role, industry: p.industry, product: p.product },
+    difficulty: S.difficulty, goal: S.goal, seller: { ...S.seller },
+    stats: computeStats(), turns: S.turns.map((t) => ({ role: t.role, text: t.text })), result: r,
+  };
+}
+function recordMarkdown(rec) {
+  const p = rec.persona, r = rec.result, st = rec.stats;
+  const cell = (s) => String(s).replace(/\|/g, '｜').replace(/\n/g, ' ');
+  const lines = [
+    `# 商談ロープレ結果：${p.company} ${p.name}様／${p.product}`,
+    '',
+    `- 日時：${fmtDate(rec.savedAt)}`,
+    `- 難易度：${(DIFF[rec.difficulty] || DIFF.normal).label}`,
+    `- ゴール：${rec.goal}`,
+    `- 総合：${r.total}点（ランク${rankOf(r.total)}）／商談結果：${r.outcome}`,
+    `- 商談時間 ${fmtDur(st.duration)}／発言 ${st.utter}回／質問 ${st.questions}問／あなたが話した割合 ${st.ratio}%`,
+    '', '## 総評', '', r.summary, '',
+    '## 項目別の評価', '', '| 項目 | 点数 | 講評 |', '|---|---|---|',
+    ...r.cats.map((c) => `| ${cell(c.label)} | ${c.score} | ${cell(c.comment)} |`), '',
+  ];
+  if (r.caps && r.caps.length) lines.push('## 自動で適用した減点ルール', '', ...r.caps.map((s) => `- ${s}`), '');
+  if (r.pro && r.pro.steps && r.pro.steps.length) {
+    lines.push(`## お手本の商談との比較（できた ${r.pro.steps.filter((s) => s.did === '○').length} / ${r.pro.steps.length}）`, '');
+    if (r.pro.summary) lines.push(r.pro.summary, '');
+    r.pro.steps.forEach((s, i) => {
+      lines.push(`${i + 1}. ${s.did} ${s.step}`);
+      if (s.you) lines.push(`   - あなた：${s.you}`);
+      if (s.pro) lines.push(`   - お手本なら：${s.pro}`);
+    });
+    lines.push('');
+  }
+  if (r.needs.length) lines.push(`## お客様の本音をどこまで引き出せたか（${r.needs.filter((n) => n.found).length} / ${r.needs.length}）`, '', ...r.needs.map((n) => `- ${n.found ? '[引き出せた]' : '[聞けていない]'} ${n.need}`), '');
+  lines.push('## 良かった点', '', ...r.strengths.map((s) => `- ${s}`), '', '## 改善点', '', ...r.improvements.map((s) => `- ${s}`), '');
+  if (r.rewrites.length) {
+    lines.push('## こう言い換えると良くなる', '');
+    r.rewrites.forEach((w) => { if (w.original) lines.push(`- あなたの発言：${w.original}`); lines.push(`- 言い換え例：${w.better}`); if (w.why) lines.push(`- 理由：${w.why}`); lines.push(''); });
+  }
+  if (r.voice) lines.push('## 商談後のお客様の本音', '', `> ${r.voice}`, '');
+  lines.push('## 会話ログ', '', ...rec.turns.map((t) => `**${t.role === 'seller' ? 'あなた' : p.short}**：${t.text}  `), '');
+  return lines.join('\n');
+}
+async function persistRecord(rec) {
+  saveLocalRecord(rec);
+  const el = $('#saveStatus');
+  if (el && el.dataset.id === rec.id) { el.className = 'save-status ok'; el.textContent = 'このブラウザに保存しました（デモ版では結果はお使いのブラウザ内にのみ保存されます）'; }
+}
+
+/* ---------- Meeting ---------- */
+function showScreen(id) { ['lobby', 'meeting', 'report'].forEach((s) => { $('#' + s).hidden = s !== id; }); }
+const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const fmtDur = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+
+async function startMeeting() {
+  S.persona = currentPersona();
+  S.seller = { name: $('#sellerName').value.trim() || 'あなた', company: $('#sellerCompany').value.trim() };
+  S.goal = $('#goal').value.trim() || S.persona.goal;
+  S.turns = []; S.ended = false; S.busy = false; S.result = null; S.bargeIn = false; S.joined = false;
+  TTS.noted = false;
+  try { TTS.ctx(); } catch (e) { /* audio starts on first use instead */ } // unlock audio while we still have the click
+  S.headphones = false; // the mic is always off on the customer's turn
+  S.interest = clamp(S.persona.startInterest + DIFF[S.difficulty].delta, 5, 90);
+  const p = S.persona;
+
+  $('#mtgTitle').textContent = `${p.company}様 オンライン商談`;
+  $('#custName').textContent = `${p.name}（${p.company}）`;
+  $('#selfName').textContent = `${S.seller.name}（自分）`;
+  $('#selfInitial').textContent = S.seller.name.slice(0, 1);
+  const tile = $('#custTile');
+  const old = tile.querySelector('.avatar'); if (old) old.remove();
+  tile.insertAdjacentHTML('afterbegin', avatarSVG(p.look));
+  face = new Face(tile.querySelector('.avatar'));
+  tile.classList.add('joining'); $('#joinNote').hidden = false;
+  $('#joinNote').innerHTML = '接続しています…<small id="joinProgress"></small>';
+  $('#log').innerHTML = ''; $('#msg').value = ''; $('#heard').hidden = true;
+  $('#caption').classList.add('fade'); $('#hintBox').hidden = true; $('#endPop').hidden = true;
+  setInterest(S.interest, true);
+  showScreen('meeting');
+  micUI();
+  // Load the 3D customer while the mic starts up. Falls back to the illustration if it can't load.
+  // (The size the server reports can be the compressed size, so the percentage is capped.)
+  const avatarLoad = Av3D.load(p, (pct) => { const el = $('#joinProgress'); if (el) el.textContent = `映像を読み込んでいます ${Math.min(99, pct)}%`; });
+
+  S.startAt = Date.now();
+  fetch(PROXY + '?action=start', { method: 'POST' }).catch(() => {});
+  clearInterval(S.timerId);
+  S.timerId = setInterval(() => {
+    const left = Math.max(0, DEMO_LIMIT_SEC - Math.floor((Date.now() - S.startAt) / 1000));
+    const el = $('#timer');
+    el.textContent = '残り ' + fmtDur(left * 1000);
+    el.style.color = left <= 30 ? 'var(--danger)' : '';
+    if (left === 30) toast('デモ終了まで残り30秒です');
+    if (left <= 0 && !S.ended) {
+      toast('デモの3分が終了しました。採点に進みます');
+      const enough = sellerTurns() >= 2;
+      endMeeting();
+      if (enough) runScoring(); else goHome();
+    }
+  }, 500);
+  $('#timer').textContent = '残り 03:00';
+  clearInterval(S.uiTimer); S.uiTimer = setInterval(updateComposer, 250);
+  addSys(`${S.seller.name}さんがミーティングに参加しました`);
+
+  if (SRClass) {
+    const ok = await Level.start();
+    if (S.ended) return;
+    if (ok) Mic.start();
+    else addSys('マイクの使用が許可されませんでした。マイクボタンから再度オンにできます。チャット入力でも話せます。', { err: true });
+  }
+
+  const t0 = Date.now();
+  const has3d = await avatarLoad;
+  if (S.ended) return;
+  if (!has3d) Av3D.hide();
+  await new Promise((r) => setTimeout(r, Math.max(0, 600 - (Date.now() - t0))));
+  if (S.ended) return;
+  tile.classList.remove('joining'); $('#joinNote').hidden = true;
+  toast(`${p.name}さんが参加しました`);
+  addSys(`${p.name}さんが参加しました`);
+  setTimeout(async () => {
+    if (S.ended) return;
+    const show = () => {
+      S.turns.push({ role: 'customer', text: p.opener });
+      addMsg('customer', p.opener);
+      setCaption(p.opener);
+      S.joined = true;
+    };
+    Speaker.begin();
+    if (TTS.usable()) {
+      setCaption('', true);
+      const started = await Speaker.speakGemini(p.opener, show);
+      if (!started || S.ended) return;
+    } else { show(); Speaker.push(p.opener); }
+    Speaker.finish();
+  }, 700);
+}
+
+function setInterest(v, silent) {
+  const prev = S.interest; S.interest = v;
+  $('#interestFill').style.width = v + '%';
+  $('#interestFill').style.background = v < 35 ? 'var(--danger)' : v < 65 ? 'var(--warn)' : 'var(--good)';
+  $('#interestVal').textContent = v;
+  face && face.setMood(v);
+  Av3D.setMood(v);
+  const d = $('#interestDelta');
+  if (!silent && v !== prev) {
+    d.textContent = (v > prev ? '+' : '') + (v - prev);
+    d.className = 'delta show ' + (v > prev ? 'up' : 'down');
+    clearTimeout(setInterest.t); setInterest.t = setTimeout(() => { d.className = 'delta'; }, 2600);
+  }
+}
+function toast(text) {
+  const t = $('#toast'); t.textContent = text; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 2600);
+}
+
+/* Chat log */
+function addMsg(role, text) {
+  const el = document.createElement('div');
+  const me = role === 'seller';
+  el.className = 'msg ' + (me ? 'me' : 'them');
+  el.innerHTML = `<div class="meta"><b>${esc(me ? '自分' : S.persona.name)}</b>→ 全員<time>${nowHM()}</time></div><div class="bubble"></div>`;
+  el.querySelector('.bubble').textContent = text;
+  $('#log').appendChild(el); scrollLog();
+  return el.querySelector('.bubble');
+}
+function addSys(text, opts = {}) {
+  const el = document.createElement('div');
+  el.className = 'msg sys' + (opts.err ? ' err' : '');
+  el.textContent = text;
+  if (opts.retry) {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = '再送';
+    b.addEventListener('click', () => { el.remove(); respond(); });
+    el.appendChild(b);
+  }
+  $('#log').appendChild(el); scrollLog();
+  return el;
+}
+function scrollLog() { const l = $('#log'); l.scrollTop = l.scrollHeight; }
+
+/* Captions */
+function setCaption(text, thinking) {
+  const c = $('#caption');
+  clearTimeout(setCaption.t);
+  if (!S.cc) { c.classList.add('fade'); return; }
+  c.innerHTML = `<span class="who">${esc(S.persona.short)}</span>` + (thinking ? '<span class="dots"><i></i><i></i><i></i></span>' : '');
+  if (!thinking) c.appendChild(document.createTextNode(text));
+  c.classList.remove('fade');
+}
+function captionLater() { clearTimeout(setCaption.t); setCaption.t = setTimeout(() => $('#caption').classList.add('fade'), 4500); }
+
+/* Composer + status line */
+function updateComposer() {
+  if (S.ended) return;
+  $('#sendBtn').disabled = S.busy;
+  const vs = $('#voiceState'), note = $('#composerNote');
+  let cls = '', txt = '';
+  syncMicToTurn();
+  $('#passBtn').disabled = !isYourTurn();
+  if (!S.joined) { txt = '相手の入室を待っています…'; }
+  else if (S.busy) { cls = 'ai'; txt = `${S.persona.short}さんが考えています（マイクは止まっています）`; }
+  else if (Speaker.active) { cls = 'ai'; txt = `${S.persona.short}さんが話しています（マイクは止まっています）`; }
+  else if (Mic.enabled && !Mic.paused) { cls = 'listen'; txt = S.manual ? 'あなたの番です。話し終えたら「相手に渡す」かEnterを押してください' : 'あなたの番です。話しかけてください'; }
+  else if (SRClass) { txt = 'マイクはミュート中です'; }
+  vs.className = 'voice-state ' + cls;
+  if (note.textContent !== txt) note.textContent = txt;
+}
+$('#composer').addEventListener('submit', (e) => { e.preventDefault(); sendTyped(); });
+$('#msg').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); sendTyped(); }
+});
+function sendTyped() {
+  const box = $('#msg'); const text = box.value.trim();
+  if (!text || S.busy || S.ended || !S.joined) return;
+  box.value = '';
+  sendText(text);
+}
+function sendText(text) {
+  if (S.ended || S.busy) return;
+  Speaker.reset();
+  Mic.clearBuf();
+  S.turns.push({ role: 'seller', text });
+  addMsg('seller', text);
+  $('#hintBox').hidden = true;
+  respond();
+}
+
+function customerRules() {
+  const p = S.persona, d = DIFF[S.difficulty];
+  const hidden = p.hidden.length
+    ? '- 営業担当者には自分から言わない本音・事情:\n' + p.hidden.map((h) => '  - ' + h).join('\n')
+    : '- 本音や事情（課題、予算、決裁の流れ、過去の経験、懸念）は、人物像に合うものをあなたが具体的に決め、会話を通じて一貫させる。営業担当者には自分から言わない。';
+  return `あなたは営業ロールプレイの「顧客役」です。オンライン会議（ビデオ通話）で、営業担当者からの商談を受けています。以下の人物になりきり、営業担当者の発言に声で返答してください。
+
+# あなたの人物設定
+- 名前: ${p.name}
+- 会社: ${p.company}（${p.industry}）
+- 役職: ${p.role}${p.age ? `（${p.age}歳）` : ''}
+- 性格: ${p.personality}
+- 状況: ${p.situation}
+${hidden}
+
+# 営業担当者が提案している商材
+${p.product}: ${p.productDesc}
+
+# 営業担当者
+${S.seller.company ? S.seller.company + 'の' : ''}${S.seller.name}さん
+
+# 難易度: ${d.label}
+${d.rule}
+
+# 話し方のルール
+- 音声で会話しています。日本語の自然な話し言葉で、1回の発言は1〜3文、長くても100字程度。ビジネスの場にふさわしい口調で、人物像に合わせる。
+- 営業担当者の発言は音声認識の結果なので、多少の誤変換は文脈で補って理解する。
+- 本物の会話らしく、ときどき「そうですね」「うーん」「なるほど」「あー」のような相づちや言いよどみを自然に入れる（毎回ではなく、入れすぎない）。書き言葉のような整いすぎた文にしない。
+- 本音や事情は、的確な質問をされたときに少しずつ明かす。聞かれていないことまで話さない。
+- 営業担当者の対応で態度を変える。一方的な説明、押し売り、こちらの事情を無視した提案には冷たくなる。共感、的確なヒアリング、課題に沿った具体的な提案には前向きになる。
+- 価格、導入の手間、社内の説得など、人物像に合った懸念や反論を自然に出す。
+- 自分がAIであることやロールプレイであることには一切触れない。ト書き、括弧書きの動作、記号、箇条書き、絵文字は使わない。
+- 営業担当者が商談を締めくくったら、自然に挨拶して会話を終える。
+- 毎回の発言の最後に、改行してから「<<関心度:数値>>」を書く。数値はこの商材を導入したい気持ちの強さ（0〜100の整数）。今の値は${S.interest}。会話に応じて上下させ、1回の変化は大きくても15程度にする。`;
+}
+function toContents(turns) {
+  const out = [{ role: 'user', parts: [{ text: '（オンライン会議が始まりました。最初の挨拶をしてください）' }] }];
+  for (const t of turns) {
+    const role = t.role === 'seller' ? 'user' : 'model';
+    const last = out[out.length - 1];
+    if (last.role === role) last.parts[0].text += '\n' + t.text;
+    else out.push({ role, parts: [{ text: t.text }] });
+  }
+  return out;
+}
+const visible = (raw) => raw.split(/<<|＜＜|《/)[0].replace(/<$/, '').replace(/[*＊#]/g, '').trim();
+function parseReply(raw) {
+  const m = raw.match(/(?:<<|＜＜|《)\s*関心度\s*[:：]\s*(\d{1,3})/);
+  return { say: visible(raw) || '……', interest: m ? clamp(parseInt(m[1], 10), 0, 100) : null };
+}
+
+async function respond() {
+  if (S.ended || !AI.key) return;
+  S.busy = true; S.bargeIn = false; updateComposer();
+  setCaption('', true);
+  const ctl = S.ctl = new AbortController();
+  let bubble = null, spoken = 0, shown = '';
+  // Gemini voice: the reply appears when the customer starts speaking, like in a real call.
+  // Browser voice: the text streams in and each sentence is spoken as soon as it arrives.
+  const useGem = TTS.usable();
+  Speaker.begin();
+  const feed = (v, final) => { // hand complete sentences to the voice as they arrive
+    const rest = v.slice(spoken);
+    let cut = 0;
+    if (final) cut = rest.length;
+    else { const m = rest.match(/^[\s\S]*[。！？!?\n]/); if (m) cut = m[0].length; }
+    if (cut > 0) { Speaker.push(rest.slice(0, cut)); spoken += cut; }
+  };
+  try {
+    const raw = await geminiFB({
+      model: AI.chatModel, system: customerRules(), contents: toContents(S.turns), signal: ctl.signal, maxTokens: 512, idleMs: 25000,
+      onText: ({ text }) => {
+        if (S.ended || ctl.signal.aborted || useGem) return;
+        const v = visible(text);
+        if (!v) return;
+        shown = v;
+        if (!bubble) bubble = addMsg('customer', v); else { bubble.textContent = v; scrollLog(); }
+        setCaption(v);
+        feed(v, false);
+      },
+    });
+    if (S.ended) return;
+    const { say, interest } = parseReply(raw);
+    if (useGem) {
+      const started = await Speaker.speakGemini(say, () => {
+        bubble = addMsg('customer', say);
+        S.turns.push({ role: 'customer', text: say });
+        setCaption(say);
+        if (interest !== null) setInterest(interest);
+      }, ctl.signal);
+      if (!started) return; // you started talking before the customer did
+      Speaker.finish();
+      return;
+    }
+    if (!bubble) bubble = addMsg('customer', say); else bubble.textContent = say;
+    S.turns.push({ role: 'customer', text: say });
+    setCaption(say);
+    if (interest !== null) setInterest(interest);
+    feed(say, true);
+    Speaker.finish();
+  } catch (e) {
+    if (e && e.code === 'cancelled') {
+      if (useGem) return;
+      if (S.bargeIn && shown) { S.turns.push({ role: 'customer', text: shown + '…' }); }
+      else if (bubble) bubble.closest('.msg').remove();
+      return;
+    }
+    Speaker.reset();
+    if (bubble) bubble.closest('.msg').remove();
+    $('#caption').classList.add('fade');
+    addSys(errCopy(e), { err: true, retry: !(e && (e.code === 'bad_key' || e.code === 'model_not_found')) });
+  } finally {
+    if (S.ctl === ctl) { S.busy = false; S.ctl = null; }
+    updateComposer();
+  }
+}
+
+/* Toolbar */
+function toggleTool(btn, on, labelOn, labelOff) {
+  btn.setAttribute('aria-pressed', String(on));
+  const sp = btn.querySelector('span'); if (sp && labelOn) sp.textContent = on ? labelOn : labelOff;
+}
+$('#tChat').addEventListener('click', () => { S.chat = !S.chat; $('#chatPanel').hidden = !S.chat; toggleTool($('#tChat'), S.chat); });
+$('#tCC').addEventListener('click', () => { S.cc = !S.cc; toggleTool($('#tCC'), S.cc, '字幕', '字幕オフ'); if (!S.cc) $('#caption').classList.add('fade'); });
+$('#tVoice').addEventListener('click', () => { S.voice = !S.voice; toggleTool($('#tVoice'), S.voice, '読み上げ', '読み上げオフ'); if (!S.voice && ttsSupported) { try { speechSynthesis.cancel(); } catch (e) { /* ignore */ } } });
+$('#tLayout').addEventListener('click', () => {
+  S.layout = S.layout === 'speaker' ? 'gallery' : 'speaker';
+  $('#stage').className = 'stage ' + S.layout;
+  toggleTool($('#tLayout'), true, S.layout === 'speaker' ? 'スピーカー' : 'ギャラリー');
+});
+if (!ttsSupported) $('#tVoice').hidden = true;
+$('#hintClose').addEventListener('click', () => { $('#hintBox').hidden = true; });
+
+function stopCam() {
+  if (S.cam) S.cam.getTracks().forEach((t) => t.stop());
+  S.cam = null;
+  const v = $('#selfVideo'); v.srcObject = null; v.hidden = true; $('#selfInitial').hidden = false;
+  toggleTool($('#tVideo'), false, 'ビデオの停止', 'ビデオの開始');
+}
+$('#tVideo').addEventListener('click', async () => {
+  if (S.cam) { stopCam(); return; }
+  try {
+    S.cam = await navigator.mediaDevices.getUserMedia({ video: true });
+    const v = $('#selfVideo'); v.srcObject = S.cam; v.hidden = false; $('#selfInitial').hidden = true;
+    toggleTool($('#tVideo'), true, 'ビデオの停止', 'ビデオの開始');
+  } catch (e) { toast('カメラを使えませんでした'); }
+});
+
+function transcriptText() { return S.turns.map((t) => (t.role === 'seller' ? '[営業] ' : '[顧客] ') + t.text).join('\n'); }
+$('#tHint').addEventListener('click', async () => {
+  if (S.hintBusy || S.ended) return;
+  S.hintBusy = true; $('#tHint').disabled = true;
+  $('#hintBox').hidden = false; $('#hintText').textContent = '考えています…';
+  const p = S.persona;
+  const prompt = `あなたは法人営業のコーチです。以下はオンライン商談ロールプレイの途中経過です。営業担当者が次に取るべき一手を、そのまま使える一言の例を含めて2文以内で助言してください。前置き、見出し、記号は不要です。
+
+# 設定
+商材: ${p.product}（${p.productDesc}）
+顧客: ${p.company} ${p.role}（${p.industry}）
+営業のゴール: ${S.goal}
+
+# ここまでの会話
+${transcriptText()}`;
+  try {
+    const text = await geminiFB({ model: AI.chatModel, contents: [{ role: 'user', parts: [{ text: prompt }] }], maxTokens: 256, onText: ({ text }) => { $('#hintText').textContent = text; } });
+    $('#hintText').textContent = text.replace(/[*＊#]/g, '').trim();
+  } catch (e) {
+    $('#hintText').textContent = errCopy(e);
+  } finally { S.hintBusy = false; $('#tHint').disabled = false; }
+});
+
+/* End meeting */
+const sellerTurns = () => S.turns.filter((t) => t.role === 'seller').length;
+$('#endBtn').addEventListener('click', () => {
+  const pop = $('#endPop');
+  if (!pop.hidden) { pop.hidden = true; return; }
+  const enough = sellerTurns() >= 2;
+  $('#endPopText').textContent = enough ? '商談を終了して採点しますか？（デモは3分までです）' : 'あなたの発言が2回未満のため、採点はできません。終了してトップに戻りますか？';
+  $('#endConfirm').textContent = enough ? '終了して採点する' : '終了する';
+  pop.hidden = false; $('#endCancel').focus();
+});
+$('#endCancel').addEventListener('click', () => { $('#endPop').hidden = true; });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#endPop').hidden = true; });
+$('#endConfirm').addEventListener('click', () => {
+  $('#endPop').hidden = true;
+  const enough = sellerTurns() >= 2;
+  endMeeting();
+  if (enough) runScoring(); else goHome();
+});
+function endMeeting() {
+  S.ended = true; S.endAt = Date.now();
+  clearInterval(S.timerId); clearInterval(S.uiTimer);
+  if (S.ctl) { S.ctl.abort(); S.ctl = null; }
+  S.busy = false;
+  Mic.stop(); Level.stop(); stopCam(); Speaker.reset(); Av3D.pause();
+}
+function goHome() {
+  if (S.scoreCtl) { S.scoreCtl.abort(); S.scoreCtl = null; }
+  renderHistory(); showScreen('lobby');
+}
+
+/* ---------- Scoring ---------- */
+/* Scoring criteria, based on established top-performer sales method:
+   fact-finding (3 steps / 7 facts), SPIN (situation -> problem -> implication -> need-payoff),
+   and the rules: don't open with small talk, be considerate but don't hold back,
+   make the customer notice the seriousness of the issue themselves.
+   [key, label, what is judged, weight in the total] */
+const CATS = [
+  ['connecting', 'コネクティング', '雑談ではなく、相手の事業・役割・関心事に触れる質問で場を作れたか。商談の目的と時間の使い方を最初に合意したか。会社説明や自己紹介を短く済ませたか', 0.10],
+  ['factfinding', '現状と理想の把握', '相手のビジネスと現状を数字で把握し、理想（目標）を数字・期限・重要度まで引き出し、その差（ギャップ）を相手の言葉で確認できたか。質問の意図が伝わる聞き方か。相手に多く話させたか', 0.25],
+  ['cause', '原因の深掘りと示唆', 'ギャップの原因を相手に考えてもらい、表面的な理由で止めずに根本原因まで掘れたか。自分で調べた事実や比較（相手の理想・競合・市場の変化）を示して、相手が気づいていなかった重要で急ぐべき課題に気づかせたか', 0.20],
+  ['proposal', '課題設定と提案', '解決すべき課題を相手と合意してから提案したか。商品説明ではなく、相手の目線で「自分ならこう進める」という道筋と、得られる成果（いつまでに・どのくらい）を示せたか。相手が言った言葉や数字を使ったか', 0.15],
+  ['objection', '懸念への対応', '懸念や反論を受け止めたうえで、言い返すのではなく質問で相手自身に気づかせたか。遠慮して引き下がらず、根拠を持って必要性を伝えたか。決裁者・予算・競合比較など失注につながる要因を先回りして確認したか（反論が出なかった場合はこの先回りで評価）', 0.15],
+  ['closing', '次の約束', '次のステップを日時・参加者（決裁者を含む）・目的まで具体的に合意できたか。相手の温度感を確かめてから提案の許可を取ったか', 0.15],
+];
+// お手本の商談の流れ（比較用のチェックポイント）
+const PRO_STEPS = [
+  '冒頭で「相手の関心事に沿った提案をしたいので、少し質問させてほしい」と目的を伝え、質問の許可を取る',
+  '相手が今いちばん成し遂げたいこと（理想・目標）を聞く',
+  '理想を数字と期限にしてもらい、その数字にした理由や背景（なぜその数字か）を聞く',
+  'その目標の重要度（100点満点で何点か）と、達成の難しさを聞く',
+  '現状の数字とこれまでの進み具合を聞き、このままでは届かないというギャップを相手の言葉で確認する',
+  'ギャップが生まれている原因を相手に聞き、根本の要因まで深掘りする',
+  '自分で調べた事実や比較（相手の理想・競合・市場）をもとに、相手が気づいていない示唆を出す',
+  '解決すべき課題として合意し、感触を確かめてから提案や次回の約束につなげる',
+];
+const OUTCOMES = { '次回アポ獲得': 'good', '前向きに検討': 'accent', '保留': 'warn', '失注': 'danger' };
+const rankOf = (t) => (t >= 90 ? 'S' : t >= 80 ? 'A' : t >= 65 ? 'B' : t >= 50 ? 'C' : 'D');
+
+function scorePrompt() {
+  const p = S.persona;
+  const needs = p.hidden.length ? p.hidden.map((h) => '- ' + h).join('\n') : '（設定なし。会話から読み取れる顧客の課題・懸念を挙げること）';
+  return `あなたは法人営業のトレーニング講師です。以下のオンライン商談ロールプレイで、営業担当者の対応を採点してください。営業担当者の発言は音声認識の結果なので、誤変換や句読点の有無は減点しないでください。
+
+# 商談の設定
+- 商材: ${p.product}（${p.productDesc}）
+- 顧客: ${p.company} ${p.role} ${p.name}（${p.industry}）。性格: ${p.personality}
+- 難易度: ${DIFF[S.difficulty].label}
+- 営業のゴール: ${S.goal}
+- 商談時間: ${fmtDur(S.endAt - S.startAt)}
+- 顧客の隠れたニーズ・事情（営業担当者には非公開）:
+${needs}
+
+# 会話記録
+${transcriptText()}
+
+# 評価の考え方（トップ営業の型）
+- 買う気がない相手に商品を説明しても売れない。質問で相手の理想・現状・ギャップ・原因という事実を見つけ、相手自身が「このままではまずい」と気づいたときに初めて提案が刺さる（ファクトファインディング）。
+- 流れは「相手の事業と現状の理解 → 理想（数字・期限・重要度） → ギャップ（問題） → 原因 → 示唆（比較：相手の理想・競合・市場） → 解決すべき課題の合意」。
+- 雑談や世間話から入るのは減点。相手の事業・役割・関心事に関する質問で入るのが良い。
+- 相手の言いなりになって引き下がる（遠慮する）のは減点。配慮しつつ必要性ははっきり伝える。
+- 反論には言い返さず、質問で相手自身に気づかせる。決裁者・予算の出どころ・競合比較など失注要因を先回りで確認する。
+- 提案は商品説明ではなく、相手の目線で「自分ならこう進める」と道筋と成果（いつ・どれだけ）を示す。
+
+# お手本：トップ営業の商談の流れ
+${PRO_STEPS.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+この流れをすべて自然な会話でこなし、相手が「早く提案してほしい」と言う状態を作ったロープレを90点とする。
+
+# 採点ルール（厳しめに）
+- 各項目0〜100点。基準: 90以上=お手本と同等、75=現場で通用する、60=型は最低限できている、40=型が崩れている、20以下=ほぼできていない。
+- 迷ったら低い方の点を付ける。気持ちや丁寧さだけでは加点しない。実際の発言に根拠がない項目は40点以下。
+- 理想や現状を数字で聞いていなければ「現状と理想の把握」は50点以下。原因を相手に聞いていなければ「原因の深掘りと示唆」は40点以下。
+- 課題を合意する前に商品説明を始めたら「課題設定と提案」は40点以下。次回の日時を決めていなければ「次の約束」は40点以下。
+- 営業担当者が一方的に長く話している場合は、関係する項目を下げる。
+${CATS.map(([k, l, d]) => `- ${k}（${l}）: ${d}`).join('\n')}
+
+# 出力
+次の形のJSONだけを返してください。文章はすべて日本語。
+{"categories":{${CATS.map(([k]) => `"${k}":{"score":0,"comment":"根拠となる発言に触れた30字程度の講評"}`).join(',')}},
+"outcome":"次回アポ獲得 / 前向きに検討 / 保留 / 失注 のいずれか1つ",
+"summary":"総評を2〜3文。お手本との差をはっきり書く",
+"strengths":["良かった点（1〜3個。本当に良かった点だけ）"],
+"improvements":["改善点（3個、具体的に。次の商談で何を聞く・言うべきか）"],
+"rewrites":[{"original":"営業担当者の実際の発言をそのまま引用","better":"より良い言い方の例","why":"理由を1文"}],
+"needs":[{"need":"顧客の隠れたニーズ・事情を短く","found":true}],
+"pro":{"summary":"お手本の商談と比べた総評を2文","steps":[{"did":"○ / △ / × のいずれか","you":"そのステップに当たる営業担当者の実際の発言（なければ空文字）","pro":"お手本ならこの商談でこう言う、という具体的な一言（この顧客と商材に合わせる）"}]},
+"customerVoice":"商談を終えた顧客の本音を、顧客本人の口調で1〜2文"}
+rewrites は2個。needs は上の隠れたニーズごとに、営業担当者が会話の中で引き出せたら found を true にする。
+pro.steps は上の「お手本の商談の流れ」の1〜8に対応する8個を順番どおりに必ず出す。○=できた、△=一部できた、×=できていない。`;
+}
+function parseJSON(raw) {
+  const t = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+  try { return JSON.parse(t); } catch (e) { /* try the outermost object */ }
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (e) { /* fall through */ } }
+  throw { code: 'invalid_json' };
+}
+function normalize(d) {
+  if (!d || typeof d !== 'object' || !d.categories || typeof d.categories !== 'object') throw { code: 'invalid_json' };
+  const cats = CATS.map(([k, l, , w]) => {
+    const c = d.categories[k] || {};
+    let s = Math.round(Number(c.score)); if (!Number.isFinite(s)) s = 0;
+    return { key: k, label: l, weight: w, score: clamp(s, 0, 100), comment: String(c.comment || '') };
+  });
+  const arr = (x, n) => (Array.isArray(x) ? x.filter(Boolean).slice(0, n) : []);
+  const pm2 = d.pro && typeof d.pro === 'object' ? d.pro : {};
+  const proSteps = Array.isArray(pm2.steps) ? pm2.steps : [];
+  const pro = !proSteps.length ? null : { // null when the AI left the comparison out
+    summary: String(pm2.summary || ''),
+    steps: PRO_STEPS.map((step, i) => {
+      const s = proSteps[i] || {};
+      const did = /○|◯|〇/.test(String(s.did)) ? '○' : /△/.test(String(s.did)) ? '△' : '×';
+      return { step, did, you: String(s.you || ''), pro: String(s.pro || '') };
+    }),
+  };
+  return {
+    cats, total: weightedTotal(cats), caps: [], pro,
+    outcome: Object.prototype.hasOwnProperty.call(OUTCOMES, d.outcome) ? d.outcome : '保留',
+    summary: String(d.summary || ''),
+    strengths: arr(d.strengths, 3).map(String),
+    improvements: arr(d.improvements, 3).map(String),
+    rewrites: arr(d.rewrites, 2).filter((r) => r && r.better).map((r) => ({ original: String(r.original || ''), better: String(r.better), why: String(r.why || '') })),
+    needs: arr(d.needs, 6).filter((n) => n && n.need).map((n) => ({ need: String(n.need), found: n.found === true || n.found === 'true' })),
+    voice: String(d.customerVoice || ''),
+  };
+}
+function weightedTotal(cats) {
+  const wsum = cats.reduce((a, c) => a + (c.weight || 0), 0);
+  if (!wsum) return Math.round(cats.reduce((a, c) => a + c.score, 0) / cats.length);
+  return Math.round(cats.reduce((a, c) => a + c.score * (c.weight || 0), 0) / wsum);
+}
+/* Hard limits applied by the page itself (not left to the AI), so a weak session can't score high. */
+function applyCaps(r, st) {
+  const cap = (key, max, why) => {
+    const c = r.cats.find((x) => x.key === key);
+    if (c && c.score > max) { c.score = max; if (!r.caps.includes(why)) r.caps.push(why); }
+  };
+  const capAll = (max, why) => r.cats.forEach((c) => cap(c.key, max, why));
+  if (st.utter < 4) capAll(50, `あなたの発言が${st.utter}回と少ないため、全項目を50点までにしました`);
+  if (st.questions === 0) { cap('factfinding', 20, '質問が1つもないため、把握・深掘りの項目を大きく下げました'); cap('cause', 20, '質問が1つもないため、把握・深掘りの項目を大きく下げました'); }
+  else if (st.questions < 3) cap('factfinding', 55, `質問が${st.questions}問と少ないため、「現状と理想の把握」を55点までにしました`);
+  if (st.ratio > 70) { cap('factfinding', 35, `あなたが話した割合が${st.ratio}%と高すぎるため、関連項目を下げました`); cap('connecting', 45, `あなたが話した割合が${st.ratio}%と高すぎるため、関連項目を下げました`); }
+  else if (st.ratio > 60) { cap('factfinding', 55, `あなたが話した割合が${st.ratio}%と高めのため、関連項目を下げました`); cap('connecting', 60, `あなたが話した割合が${st.ratio}%と高めのため、関連項目を下げました`); }
+  const did = (i) => (r.pro ? (r.pro.steps[i] || {}).did : null);
+  if (did(7) === '×') cap('closing', 40, '次の約束（提案や次回の日時）につなげていないため、「次の約束」を40点までにしました');
+  if (did(5) === '×') cap('cause', 45, 'ギャップの原因を相手に聞いていないため、「原因の深掘りと示唆」を45点までにしました');
+  r.total = weightedTotal(r.cats);
+  return r;
+}
+function computeStats() {
+  const sel = S.turns.filter((t) => t.role === 'seller'), cus = S.turns.filter((t) => t.role === 'customer');
+  const sc = sel.reduce((a, t) => a + t.text.length, 0), cc = cus.reduce((a, t) => a + t.text.length, 0);
+  return {
+    duration: S.endAt - S.startAt,
+    utter: sel.length,
+    questions: sel.reduce((a, t) => a + (t.text.match(/[？?]|ですか|ますか|でしょうか/g) || []).length, 0),
+    ratio: sc + cc ? Math.round((sc / (sc + cc)) * 100) : 0,
+  };
+}
+// Scoring: the careful model first; if it stalls, errors or returns broken JSON, the fast chat model takes over.
+let scoreRun = 0;
+async function runScoring(fastOnly = false) {
+  const run = ++scoreRun;
+  showScreen('report');
+  $('#scoring').hidden = false; $('#reportBody').hidden = true; $('#scoreError').hidden = true; $('#scoreFast').hidden = true;
+  $('#report').scrollTop = 0;
+  const ctl = S.scoreCtl = new AbortController();
+  const contents = [{ role: 'user', parts: [{ text: scorePrompt() }] }];
+  const t0 = Date.now();
+  let stage = 'main', chars = 0, stageStart = t0;
+  const tick = setInterval(() => {
+    const s = Math.round((Date.now() - t0) / 1000);
+    $('#scoreProgress').textContent = (stage === 'fast' ? '速いモデルで採点しています' : '採点しています')
+      + `・${s}秒経過・` + (chars ? `結果を受信中（${chars}文字）` : '考えています');
+    $('#scoreFast').hidden = stage === 'fast' || Date.now() - stageStart < 20000;
+  }, 500);
+  const onText = ({ text }) => { chars = text.length; };
+  const attempt = async (which) => {
+    stage = which; chars = 0; stageStart = Date.now();
+    const raw = which === 'main'
+      ? await geminiFB({ model: AI.scoreModel, json: true, signal: ctl.signal, maxTokens: 4096, idleMs: 45000, onText, contents })
+      : await geminiFB({ model: AI.chatModel, json: true, signal: ctl.signal, maxTokens: 4096, idleMs: 45000, onText, contents });
+    return applyCaps(normalize(parseJSON(raw)), computeStats());
+  };
+  try {
+    let r;
+    // One attempt with the fast model only: the old two-stage flow (slow model,
+    // then a full retry on the fast model) was the main reason scoring felt slow.
+    r = await attempt(fastOnly ? 'fast' : 'main');
+    if (run !== scoreRun) return;
+    S.result = r;
+    const rec = buildRecord(r);
+    renderReport(rec, { past: false });
+    persistRecord(rec);
+  } catch (e) {
+    if (run !== scoreRun || (e && e.code === 'cancelled')) return;
+    $('#scoring').hidden = true; $('#scoreError').hidden = false;
+    $('#scoreErrorText').textContent = errCopy(e);
+  } finally {
+    clearInterval(tick);
+    if (S.scoreCtl === ctl) S.scoreCtl = null;
+  }
+}
+$('#scoreFast').addEventListener('click', () => { if (S.scoreCtl) S.scoreCtl.abort(); runScoring(true); });
+$('#scoreCancel').addEventListener('click', () => { scoreRun++; goHome(); });
+$('#rescoreBtn').addEventListener('click', () => runScoring());
+$('#errHomeBtn').addEventListener('click', goHome);
+
+const barColor = (s) => (s >= 80 ? 'var(--good)' : s >= 60 ? 'var(--accent)' : s >= 40 ? 'var(--warn)' : 'var(--danger)');
+function radarSVG(cats) {
+  const cx = 160, cy = 128, R = 84, n = cats.length;
+  const pt = (i, r) => { const a = -Math.PI / 2 + (i * 2 * Math.PI) / n; return [cx + Math.cos(a) * r, cy + Math.sin(a) * r]; };
+  const poly = (r) => cats.map((_, i) => pt(i, r).map((v) => v.toFixed(1)).join(',')).join(' ');
+  let s = '<svg class="radar" viewBox="-40 0 400 256" role="img" aria-label="6項目のレーダーチャート">';
+  [20, 40, 60, 80, 100].forEach((v) => { s += `<polygon class="grid" points="${poly((R * v) / 100)}"/>`; });
+  cats.forEach((_, i) => { const [x, y] = pt(i, R); s += `<line class="axis" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`; });
+  s += `<polygon class="area" points="${cats.map((c, i) => pt(i, (R * c.score) / 100).map((v) => v.toFixed(1)).join(',')).join(' ')}"/>`;
+  cats.forEach((c, i) => { const [x, y] = pt(i, (R * c.score) / 100); s += `<circle class="pt" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.2"/>`; });
+  cats.forEach((c, i) => {
+    const [x, y] = pt(i, R + 16);
+    const anchor = x < cx - 5 ? 'end' : x > cx + 5 ? 'start' : 'middle';
+    const dy = y < cy - R ? -6 : y > cy + R ? 12 : 0;
+    s += `<text x="${x.toFixed(1)}" y="${(y + dy).toFixed(1)}" text-anchor="${anchor}">${esc(c.label)}</text>`;
+    s += `<text class="v" x="${x.toFixed(1)}" y="${(y + dy + 14).toFixed(1)}" text-anchor="${anchor}">${c.score}</text>`;
+  });
+  return s + '</svg>';
+}
+function renderReport(rec, opts = {}) {
+  const p = rec.persona, r = rec.result, st = rec.stats, turns = rec.turns, diffLabel = (DIFF[rec.difficulty] || DIFF.normal).label;
+  const C = 2 * Math.PI * 62, off = C * (1 - r.total / 100);
+  const list = (items, cls) => `<ul class="plain ${cls}">${items.map((t) => `<li><span>${esc(t)}</span></li>`).join('')}</ul>`;
+  const saveLine = opts.past
+    ? (rec.file ? `保存先：${esc(rec.file)}` : 'このブラウザに保存された結果です')
+    : '保存しています…';
+  $('#reportBody').innerHTML = `
+    <div class="r-head">
+      <div>
+        <div class="sub">商談レポート・${esc(fmtDate(rec.savedAt))}・難易度 ${esc(diffLabel)}</div>
+        <h1>${esc(p.company)} ${esc(p.name)}様／${esc(p.product)}</h1>
+        <div class="save-status${opts.past && rec.file ? ' ok' : ''}" id="saveStatus" data-id="${esc(rec.id)}">${saveLine}</div>
+      </div>
+      <div class="sub">ゴール：${esc(rec.goal)}</div>
+    </div>
+
+    <div class="card hero">
+      <div class="ring">
+        <svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--surface-2)" stroke-width="11"/>
+        <circle cx="75" cy="75" r="62" fill="none" stroke="${barColor(r.total)}" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
+        <div class="val"><b>${r.total}</b><span>/ 100 点</span></div>
+      </div>
+      <div>
+        <div><span class="rank">ランク ${rankOf(r.total)}</span><span class="chip ${OUTCOMES[r.outcome]}">商談結果：${esc(r.outcome)}</span></div>
+        <p class="summary">${esc(r.summary)}</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="card stat"><div class="k">商談時間</div><div class="v">${fmtDur(st.duration)}</div></div>
+      <div class="card stat"><div class="k">あなたの発言</div><div class="v">${st.utter}<small>回</small></div></div>
+      <div class="card stat"><div class="k">質問した数（推定）</div><div class="v">${st.questions}<small>問</small></div></div>
+      <div class="card stat"><div class="k">あなたが話した割合</div><div class="v">${st.ratio}<small>%</small></div>
+        <div class="ratio"><div class="zone"></div><div class="mark" style="left:${clamp(st.ratio, 0, 100)}%"></div></div>
+        <div class="note">緑の帯（30〜50%）が目安。文字数で計算</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h3>6項目のバランス</h3>${radarSVG(r.cats)}</div>
+      <div class="card"><h3>${r.cats.some((c) => c.weight) ? '項目別の評価（総合点は重み付き平均・トップ営業のお手本＝90点が基準）' : '項目別の評価（総合点は6項目の平均）'}</h3><div class="cats">
+        ${r.cats.map((c) => `<div class="cat"><div class="cat-top"><b>${esc(c.label)}${c.weight ? `<small class="w">比重${Math.round(c.weight * 100)}%</small>` : ''}</b><span>${c.score}</span></div>
+          <div class="bar"><div style="width:${c.score}%;background:${barColor(c.score)}"></div></div><p>${esc(c.comment)}</p></div>`).join('')}
+      </div></div>
+    </div>
+
+    ${r.caps && r.caps.length ? `<div class="card mb caps"><h3>自動で適用した減点ルール</h3>${list(r.caps, 'bad')}</div>` : ''}
+
+    ${r.pro && r.pro.steps && r.pro.steps.length ? `<div class="card mb"><h3>お手本の商談との比較（できた ${r.pro.steps.filter((s) => s.did === '○').length} / ${r.pro.steps.length}）</h3>
+      ${r.pro.summary ? `<p class="pro-sum">${esc(r.pro.summary)}</p>` : ''}
+      <ol class="prosteps">${r.pro.steps.map((s) => `<li>
+        <span class="mark ${s.did === '○' ? 'ok' : s.did === '△' ? 'part' : 'ng'}">${s.did}</span>
+        <div><div class="pro-step">${esc(s.step)}</div>
+          ${s.you ? `<div class="pro-line"><span>あなた</span>${esc(s.you)}</div>` : ''}
+          ${s.pro ? `<div class="pro-line pro"><span>お手本なら</span>${esc(s.pro)}</div>` : ''}</div>
+      </li>`).join('')}</ol></div>` : ''}
+
+    ${r.needs.length ? `<div class="card mb"><h3>お客様の本音をどこまで引き出せたか（${r.needs.filter((n) => n.found).length} / ${r.needs.length}）</h3>
+      <ul class="plain needs">${r.needs.map((n) => `<li class="${n.found ? 'found' : 'missed'}"><span>${esc(n.need)}<span class="st">${n.found ? '引き出せた' : '聞けていない'}</span></span></li>`).join('')}</ul></div>` : ''}
+
+    <div class="grid2">
+      <div class="card"><h3>良かった点</h3>${list(r.strengths, 'good')}</div>
+      <div class="card"><h3>改善点</h3>${list(r.improvements, 'bad')}</div>
+    </div>
+
+    ${r.rewrites.length ? `<div class="card mb"><h3>こう言い換えると良くなる</h3>
+      ${r.rewrites.map((w) => `<div class="rw">${w.original ? `<div class="lab">あなたの発言</div><div class="before">${esc(w.original)}</div>` : ''}
+        <div class="lab">言い換え例</div><div class="after">${esc(w.better)}</div>${w.why ? `<div class="why">${esc(w.why)}</div>` : ''}</div>`).join('')}</div>` : ''}
+
+    ${r.voice ? `<div class="card mb"><h3>商談後のお客様の本音</h3><p class="voice">${esc(r.voice)}</p><div class="voice-by">${esc(p.name)}（${esc(p.company)} ${esc(p.role)}）</div></div>` : ''}
+
+    <div class="card"><details class="transcript"><summary>会話ログを表示（${turns.length}件）</summary>
+      <div class="lines">${turns.map((t) => `<div><b>${t.role === 'seller' ? 'あなた' : esc(p.short)}</b><span>${esc(t.text)}</span></div>`).join('')}</div></details></div>
+
+    <div class="actions">
+      ${opts.past
+        ? '<button class="btn btn-primary" id="homeBtn">トップに戻る</button>'
+        : '<button class="btn btn-primary" id="againBtn">同じお客様ともう一度</button><button class="btn" id="homeBtn">別のお客様を選ぶ</button>'}
+      <button class="btn" id="copyBtn">結果をコピー</button>
+      <a class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center" href="mailto:info@logica-solutions.jp?subject=${encodeURIComponent('AI営業ロープレ 本番版について')}">本番版について問い合わせる</a>
+    </div>
+    <p class="fine" style="margin-top:10px">本番版は時間制限なし・自社の商材と想定顧客に合わせたシナリオ作成・メンバーごとの履歴管理に対応します（Logica Solutions）。</p>`;
+  $('#scoring').hidden = true; $('#reportBody').hidden = false;
+  if ($('#againBtn')) $('#againBtn').addEventListener('click', () => { renderHistory(); startMeeting(); });
+  $('#homeBtn').addEventListener('click', goHome);
+  $('#copyBtn').addEventListener('click', async () => {
+    const b = $('#copyBtn');
+    const txt = `【商談ロープレ結果】${p.company} ${p.name}様／${p.product}（難易度：${diffLabel}）
+総合 ${r.total}点（ランク${rankOf(r.total)}）・商談結果：${r.outcome}
+${r.cats.map((c) => `${c.label} ${c.score}`).join(' / ')}
+総評：${r.summary}
+良かった点：${r.strengths.join('／')}
+改善点：${r.improvements.join('／')}`;
+    try { await navigator.clipboard.writeText(txt); b.textContent = 'コピーしました'; }
+    catch (e) { b.textContent = 'コピーできませんでした'; }
+    setTimeout(() => { b.textContent = '結果をコピー'; }, 2200);
+  });
+}
+
+/* ---------- Boot ---------- */
+$('#startBtn').addEventListener('click', () => { if (!$('#startBtn').disabled) startMeeting(); });
+{
+  const ve = ls.get('ai-roleplay-voice-engine-v2'); if (ve === 'edge') $('#voiceEngine').value = ve;
+  const pm = ls.get('ai-roleplay-turn-mode'); if (pm && [...$('#pauseLen').options].some((o) => o.value === pm)) $('#pauseLen').value = pm;
+  S.voiceEngine = $('#voiceEngine').value;
+  readPauseSetting();
+}
+renderScenarios();
+setDifficulty('normal');
+selectPersona('minato');
+renderHistory();
+renderBanner();
+micUI();
+checkDemo();
+})();
+</script>
+</body>
+</html>
