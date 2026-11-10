@@ -131,27 +131,18 @@ export async function onRequest(context) {
   }
 
   const model = purpose === 'score' ? SCORE_MODEL : CHAT_MODEL;
-  // 会話は「考え込み (thinking)」を切ると返事が速くなる。採点はそのまま。
-  if (purpose === 'chat') googleBody.generationConfig.thinkingConfig = { thinkingBudget: 0 };
-  const callGemini = (body) => fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify(body),
-    },
-  );
+  // ※ thinkingConfig は付けない: gemini-2.5-flash-lite が thinkingBudget:0 を
+  //   400 (invalid argument) で弾くため。速さはストリーミング中継で確保する。
   let res;
   try {
-    res = await callGemini(googleBody);
-    if (!res.ok && purpose === 'chat' && res.status === 400) {
-      const peek = await res.clone().text().catch(() => '');
-      if (/think/i.test(peek)) { // thinkingConfig 非対応モデル向けに1回だけ外して再試行
-        const retryBody = JSON.parse(JSON.stringify(googleBody));
-        delete retryBody.generationConfig.thinkingConfig;
-        res = await callGemini(retryBody);
-      }
-    }
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify(googleBody),
+      },
+    );
   } catch (e) {
     return err(502, 'AIに接続できませんでした。', cookieHeader);
   }
