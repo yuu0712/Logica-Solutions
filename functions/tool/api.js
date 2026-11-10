@@ -131,24 +131,38 @@ export async function onRequest(context) {
   }
 
   const model = purpose === 'score' ? SCORE_MODEL : CHAT_MODEL;
-  let res;
-  try {
-    res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+  // 会話は「考え込み (thinking)」を切ると返事が速くなる。採点はそのまま。
+  if (purpose === 'chat') googleBody.generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  const callGemini = (body) => fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
+    {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify(googleBody),
-    });
+      body: JSON.stringify(body),
+    },
+  );
+  let res;
+  try {
+    res = await callGemini(googleBody);
+    if (!res.ok && purpose === 'chat' && res.status === 400) {
+      const peek = await res.clone().text().catch(() => '');
+      if (/think/i.test(peek)) { // thinkingConfig 非対応モデル向けに1回だけ外して再試行
+        const retryBody = JSON.parse(JSON.stringify(googleBody));
+        delete retryBody.generationConfig.thinkingConfig;
+        res = await callGemini(retryBody);
+      }
+    }
   } catch (e) {
     return err(502, 'AIに接続できませんでした。', cookieHeader);
   }
-  const text = await res.text();
   if (!res.ok) {
+    const text = await res.text().catch(() => '');
     let msg = 'AI service error';
     try { msg = JSON.parse(text).error?.message || msg; } catch (e) { /* keep default */ }
     return err(res.status >= 400 && res.status < 600 ? res.status : 502, String(msg), cookieHeader);
   }
-  // 画面側はストリーミング形式(SSE)で読むので、1イベントとしてそのまま渡す
-  return new Response(`data: ${text}\n\n`, {
+  // 生成を待たず、届いた分から画面へ流す（ストリーミング中継）。体感の待ち時間が大きく減る。
+  return new Response(res.body, {
     status: 200,
     headers: { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', ...cookieHeader },
   });
