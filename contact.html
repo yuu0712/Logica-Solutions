@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>資料請求 | ロジカソリューションズ</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f5f6f8;
+        margin: 0;
+        padding: 0 16px 40px;
+        color: #222;
+      }
+      header {
+        margin: 0 -16px 40px;
+        background: #fff;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      }
+      .header-in {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #123a6d;
+        text-decoration: none;
+      }
+      .logo-mark {
+        font-size: 26px;
+        font-weight: 900;
+        color: #0e7c86;
+        line-height: 1;
+      }
+      .logo b {
+        font-size: 16px;
+        letter-spacing: 0.02em;
+      }
+      .logo small {
+        display: block;
+        font-size: 8px;
+        color: #7a8aa0;
+        letter-spacing: 0.28em;
+      }
+      .container {
+        max-width: 560px;
+        margin: auto;
+        background: white;
+        padding: 32px;
+        border-radius: 12px;
+      }
+      h1 {
+        font-size: 25px;
+      }
+      label {
+        display: block;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 13px;
+        margin-top: 8px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+      button {
+        width: 100%;
+        padding: 16px;
+        margin-top: 28px;
+        border: 0;
+        border-radius: 6px;
+        background: #1d3557;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+      }
+      #message {
+        margin-top: 20px;
+      }
+      .hp {
+        position: absolute;
+        left: -9999px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-in">
+        <a class="logo" href="index.html"
+          ><span class="logo-mark">≋</span
+          ><span
+            ><b>Logica Solutions</b><small>ロジカソリューションズ</small></span
+          ></a
+        >
+      </div>
+    </header>
+    <div class="container">
+      <h1>サービス資料請求</h1>
+      <p>ロジカソリューションズのサービス資料の PDF を、ご入力のメールアドレスへ添付してお送りします。</p>
+
+      <form id="requestForm">
+        <label>会社名 *</label>
+        <input name="company" required maxlength="100" />
+
+        <label>お名前 *</label>
+        <input name="name" required maxlength="50" />
+
+        <label>メールアドレス *</label>
+        <input name="email" type="email" required maxlength="254" />
+
+        <label>電話番号（任意）</label>
+        <input name="phone" type="tel" maxlength="30" />
+
+        <label>希望資料 *</label>
+        <select name="service" required>
+          <option value="">選択してください</option>
+          <option value="AI営業ロープレツール">AI営業ロープレツール</option>
+          <option value="AI電話対応ツール">AI電話対応ツール</option>
+          <option value="両方">両方</option>
+        </select>
+
+        <label>ご質問・ご相談（任意）</label>
+        <textarea name="message" rows="4" maxlength="1000"></textarea>
+
+        <!-- スパム対策用 -->
+        <div class="hp">
+          <label>会社URL</label>
+          <input name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <label>
+          <input
+            type="checkbox"
+            name="consent"
+            value="yes"
+            required
+            style="width: auto"
+          />
+          入力した情報を資料の送付とお問い合わせへの対応に利用することに同意する
+        </label>
+
+        <button type="submit" id="submitButton">資料を無料で請求する</button>
+      </form>
+
+      <div id="message" role="status" aria-live="polite"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById("requestForm");
+      const button = document.getElementById("submitButton");
+      const message = document.getElementById("message");
+
+      let previousSubmission;
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        button.disabled = true;
+        button.textContent = "送信中...";
+
+        try {
+          const data = Object.fromEntries(new FormData(form));
+
+          const payload = JSON.stringify(data);
+          if (previousSubmission?.payload !== payload) {
+            previousSubmission = { payload, requestId: crypto.randomUUID() };
+          }
+          data.requestId = previousSubmission.requestId;
+
+          const response = await fetch("/api/request", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json().catch(() => ({}));
+
+          if (!response.ok || result.ok !== true) {
+            throw new Error(result.error || "送信に失敗しました");
+          }
+
+          form.reset();
+          previousSubmission = undefined;
+          message.textContent =
+            "資料請求ありがとうございます。メールをご確認ください。";
+        } catch (error) {
+          message.textContent = error.message || "エラーが発生しました。";
+        } finally {
+          button.disabled = false;
+          button.textContent = "資料を無料で請求する";
+        }
+      });
+    </script>
+  </body>
+</html>

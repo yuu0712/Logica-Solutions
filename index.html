@@ -3,593 +3,1336 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- ===== 基本SEO ===== -->
-    <title>
-      Logica
-      Solutions（ロジカソリューションズ）｜AI電話対応サービス・AI営業ロープレツール
-    </title>
-    <meta
-      name="description"
-      content="Logica Solutions（ロジカソリューションズ）は、AIで現場の負担を減らすサービスを提供しています。AIが24時間電話に自動応答する「AI電話対応サービス」と、AIがお客様役になり商談練習・自動採点ができる「AI営業ロープレツール」。無料相談受付中。"
-    />
-    <link rel="canonical" href="https://logica-solutions.jp/" />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
-    <meta name="theme-color" content="#132a5b" />
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- ===== OGP / SNS ===== -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Logica Solutions" />
-    <meta property="og:locale" content="ja_JP" />
-    <meta property="og:url" content="https://logica-solutions.jp/" />
-    <meta
-      property="og:title"
-      content="Logica Solutions（ロジカソリューションズ）｜AI電話対応・AI営業ロープレ"
-    />
-    <meta
-      property="og:description"
-      content="AIが24時間電話に応答する「AI電話対応サービス」と、AIと商談練習できる「AI営業ロープレツール」を提供しています。"
-    />
-    <meta
-      property="og:image"
-      content="https://logica-solutions.jp/images/ogp.png"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="AIで、もっとラクに、もっと成長を。Logica Solutions"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Logica Solutions｜AI電話対応・AI営業ロープレ"
-    />
-    <meta
-      name="twitter:description"
-      content="AI電話対応サービスとAI営業ロープレツールを提供しています。"
-    />
-    <meta
-      name="twitter:image"
-      content="https://logica-solutions.jp/images/ogp.png"
-    />
-
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/images/icon-192.png" type="image/png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-    <link
-      rel="preload"
-      as="image"
-      href="/images/hero.jpg"
-      fetchpriority="high"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Montserrat:wght@600;700&display=swap"
-      media="print"
-      onload="this.media = 'all'"
-    />
-    <noscript
-      ><link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Montserrat:wght@600;700&display=swap"
-    /></noscript>
-    <link rel="stylesheet" href="/css/style.css" />
-
-    <!-- ===== 構造化データ（JSON-LD） ===== -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Person",
-            "@id": "https://logica-solutions.jp/#founder",
-            "name": "石川 優斗",
-            "jobTitle": "代表",
-            "worksFor": { "@id": "https://logica-solutions.jp/#organization" },
-            "knowsAbout": [
-              "RAG",
-              "生成AI",
-              "データ分析",
-              "機械学習",
-              "AI電話対応",
-              "営業ロープレ"
-            ],
-            "award": "SIGNATE「SMBC Group GREEN×DATA Challenge 2024」学生部門 第2位"
-          },
-          {
-            "@type": "Organization",
-            "@id": "https://logica-solutions.jp/#organization",
-            "name": "Logica Solutions",
-            "alternateName": [
-              "ロジカソリューションズ",
-              "ロジカ ソリューションズ",
-              "ロジカソリューション",
-              "Logica Solution",
-              "LogicaSolutions"
-            ],
-            "url": "https://logica-solutions.jp/",
-            "logo": "https://logica-solutions.jp/images/logo-full.png",
-            "email": "info@logica-solutions.jp",
-            "image": "https://logica-solutions.jp/images/ogp.png",
-            "description": "AI電話対応サービスとAI営業ロープレツールを提供。",
-            "founder": { "@id": "https://logica-solutions.jp/#founder" },
-            "knowsAbout": [
-              "AI電話対応",
-              "AI電話代行",
-              "電話自動応答",
-              "営業ロープレ",
-              "営業研修",
-              "生成AI",
-              "業務効率化"
-            ]
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://logica-solutions.jp/#website",
-            "url": "https://logica-solutions.jp/",
-            "name": "Logica Solutions",
-            "alternateName": "ロジカソリューションズ",
-            "inLanguage": "ja",
-            "publisher": { "@id": "https://logica-solutions.jp/#organization" }
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://logica-solutions.jp/#webpage",
-            "url": "https://logica-solutions.jp/",
-            "name": "Logica Solutions（ロジカソリューションズ）｜AI電話対応サービス・AI営業ロープレツール",
-            "inLanguage": "ja",
-            "isPartOf": { "@id": "https://logica-solutions.jp/#website" },
-            "about": { "@id": "https://logica-solutions.jp/#organization" },
-            "mainEntity": { "@id": "https://logica-solutions.jp/#services" }
-          },
-          {
-            "@type": "ItemList",
-            "@id": "https://logica-solutions.jp/#services",
-            "name": "Logica Solutionsの提供サービス",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "AI電話対応サービス",
-                "url": "https://logica-solutions.jp/ai-phone/"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "AI営業ロープレツール",
-                "url": "https://logica-solutions.jp/sales-roleplay/"
-              }
-            ]
-          }
-        ]
+    <title>Logica Solutions｜人手不足を解消・効率化</title>
+    <style>
+      :root {
+        --navy: #2e1a47;
+        --ink: #333;
+        --gold: #b08d57;
+        --gold-btn: linear-gradient(90deg, #bd9a68, #cbb086);
+        --blue-btn: linear-gradient(
+          90deg,
+          #1748c8,
+          #2f7bff
+        ); /* 紫ボタン→青ボタン */
+        --hero-blue: #2f5da8;
+        --sol-blue: #4653b8;
+        --footer-blue: #0d5aa0;
       }
-    </script>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP",
+          sans-serif;
+        color: var(--ink);
+        line-height: 1.8;
+        background: #fff;
+      }
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .en {
+        font-family: Georgia, serif;
+        color: var(--gold);
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-align: center;
+      }
+      h2.title {
+        color: var(--navy);
+        font-size: 30px;
+        text-align: center;
+        margin: 6px 0 44px;
+        letter-spacing: 0.06em;
+      }
+      .btn {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 13px 34px;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: center;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+      }
+      .btn-blue {
+        background: var(--blue-btn);
+        color: #fff;
+      }
+      .btn-gold {
+        background: var(--gold-btn);
+        color: #fff;
+      }
+      .btn-white {
+        background: #fff;
+        color: var(--navy);
+      }
+      .btn-outline {
+        border: 1.5px solid #2563eb;
+        color: #2563eb;
+        background: #fff;
+        box-shadow: none;
+      }
+      /* header */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: #fff;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      }
+      .header-in {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 36px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #123a6d;
+      }
+      .logo-mark {
+        font-size: 26px;
+        font-weight: 900;
+        color: #0e7c86;
+        line-height: 1;
+      }
+      .logo b {
+        font-size: 16px;
+        letter-spacing: 0.02em;
+      }
+      .logo small {
+        display: block;
+        font-size: 8px;
+        color: #7a8aa0;
+        letter-spacing: 0.28em;
+      }
+      nav {
+        margin-left: auto;
+        display: flex;
+        gap: 34px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .header-btns {
+        display: flex;
+        gap: 10px;
+      }
+      .header-btns .btn {
+        padding: 10px 22px;
+      }
+      /* hero */
+      .hero {
+        background: var(--hero-blue);
+        color: #fff;
+        overflow: hidden;
+      }
+      .hero-in {
+        max-width: 1180px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1.15fr;
+        align-items: center;
+      }
+      .hero-text {
+        padding: 64px 24px 64px 48px;
+      }
+      .hero-text h1 {
+        font-size: 34px;
+        letter-spacing: 0.05em;
+        margin-bottom: 26px;
+      }
+      .hero-text p {
+        color: #e8c98a;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 34px;
+        max-width: 340px;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .hero-img {
+        height: 100%;
+        min-height: 320px;
+      }
+      /* problems */
+      .problems {
+        padding: 26px 0 84px;
+      }
+      .problems h2 {
+        font-size: 26px;
+        text-align: center;
+        color: #111;
+        margin-bottom: 36px;
+        letter-spacing: 0.06em;
+      }
+      .problem-ills {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        max-width: 1020px;
+        margin: 0 auto 42px;
+      }
+      .problem-ills svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .problem-card {
+        background: #f7f8fc;
+        border-radius: 12px;
+        padding: 24px 22px;
+      }
+      .problem-card .tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        background: #4653b8;
+        border-radius: 999px;
+        padding: 2px 12px;
+        margin-bottom: 12px;
+      }
+      .problem-card .tag.sales {
+        background: #b08d57;
+      }
+      .problem-card h3 {
+        font-size: 15px;
+        color: var(--navy);
+        margin-bottom: 8px;
+        line-height: 1.6;
+      }
+      .problem-card p {
+        font-size: 12.5px;
+        color: #666;
+      }
+      /* products */
+      .products {
+        background: #f7f7f7;
+        padding: 64px 0 96px;
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .product-card {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      }
+      .product-card .thumb {
+        height: 180px;
+      }
+      .product-card .body {
+        padding: 18px 20px 24px;
+      }
+      .product-card h3 {
+        font-size: 14px;
+        color: var(--navy);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .product-card h3 span {
+        color: var(--gold);
+      }
+      .product-card p {
+        font-size: 12px;
+        color: #555;
+        margin-top: 8px;
+      }
+      /* solutions */
+      .solutions {
+        background: linear-gradient(180deg, #4a54ba, #414cb2);
+        padding: 64px 0 40px;
+      }
+      .solutions .en {
+        color: #d9b878;
+      }
+      .solutions h2.title {
+        color: #fff;
+      }
+      .sol-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto 26px;
+      }
+      .sol-card .thumb {
+        height: 280px;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .sol-card .label {
+        color: var(--gold);
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .sol-card h3 {
+        color: var(--navy);
+        font-size: 24px;
+        margin-bottom: 18px;
+      }
+      .sol-card p {
+        font-size: 13px;
+        color: #444;
+      }
+      .solutions .note {
+        text-align: center;
+        color: #dfe3ff;
+        font-size: 11px;
+        padding: 14px 0 26px;
+      }
+      /* athena */
+      .athena {
+        background: #fdfaf4;
+        padding: 72px 0 64px;
+        text-align: center;
+      }
+      .athena h2 {
+        color: var(--navy);
+        font-size: 28px;
+        line-height: 1.6;
+        margin: 8px 0 34px;
+      }
+      .athena .lead {
+        font-size: 13.5px;
+        max-width: 760px;
+        margin: 0 auto 44px;
+      }
+      .athena .big-img {
+        max-width: 1040px;
+        height: 440px;
+        margin: 0 auto;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      /* cases */
+      .cases {
+        padding: 72px 0 84px;
+        background: linear-gradient(180deg, #fff, #fdf7fb);
+      }
+      .case-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .case-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px rgba(60, 30, 90, 0.08);
+        padding: 14px 14px 24px;
+      }
+      .case-card .thumb {
+        height: 170px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .case-card .co {
+        font-size: 11px;
+        color: #999;
+        margin: 0 8px 10px;
+      }
+      .case-card h3 {
+        font-size: 15.5px;
+        color: var(--navy);
+        line-height: 1.65;
+        margin: 0 8px 12px;
+      }
+      .case-card p {
+        font-size: 12px;
+        color: #777;
+        margin: 0 8px 16px;
+      }
+      .case-card .svc {
+        font-size: 12px;
+        color: var(--navy);
+        margin: 0 8px;
+      }
+      .case-card .svc b {
+        margin-right: 10px;
+      }
+      .center-btn {
+        text-align: center;
+        margin-top: 40px;
+      }
+      .center-btn .btn {
+        min-width: 300px;
+      }
+      /* faq */
+      .faq {
+        background: #faf5f9;
+        padding: 64px 0 84px;
+      }
+      .faq-list {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .faq-item {
+        margin-bottom: 52px;
+      }
+      .faq-item h3 {
+        font-size: 18px;
+        color: #111;
+        margin-bottom: 16px;
+      }
+      .faq-item p {
+        font-size: 15px;
+        color: #555;
+        line-height: 2.1;
+      }
+      /* news */
+      .news {
+        padding: 64px 0 84px;
+      }
+      .news-list {
+        max-width: 1000px;
+        margin: 0 auto;
+        border-top: 1px solid #eee;
+      }
+      .news-item {
+        border-bottom: 1px solid #eee;
+        padding: 18px 4px;
+      }
+      .news-item time {
+        font-size: 11px;
+        color: #999;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .news-item p {
+        font-size: 13px;
+        font-weight: 700;
+        color: #222;
+      }
+      /* cta */
+      .cta {
+        background: radial-gradient(
+          ellipse 70% 90% at 50% 0%,
+          #3d5bff 0%,
+          #12298f 55%,
+          #16265e 100%
+        );
+        padding: 56px 0 110px;
+      }
+      .cta h2 {
+        color: #fff;
+        text-align: center;
+        font-size: 26px;
+        margin-bottom: 34px;
+        letter-spacing: 0.05em;
+      }
+      .cta-box {
+        background: #fff;
+        border-radius: 12px;
+        max-width: 1040px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        overflow: hidden;
+      }
+      .cta-cell {
+        padding: 38px 30px 42px;
+        text-align: center;
+        border-right: 1px solid #eee;
+      }
+      .cta-cell:last-child {
+        border-right: none;
+      }
+      .cta-cell h3 {
+        color: var(--navy);
+        font-size: 19px;
+        margin: 8px 0 14px;
+      }
+      .cta-cell p {
+        font-size: 12.5px;
+        color: #555;
+        margin-bottom: 28px;
+      }
+      .cta-cell .btn {
+        width: 88%;
+      }
+      /* footer （少ない構成） */
+      footer {
+        background: #f2f2f2;
+        color: #333;
+        font-size: 14px;
+      }
+      .footer-in {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 54px 40px 0;
+      }
+      .footer-simple {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr 1fr;
+        gap: 56px;
+      }
+      .footer-brand {
+        font-size: 26px;
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        color: #111;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .footer-brand .tag {
+        background: #2563eb;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 4px 10px;
+        border-radius: 3px;
+      }
+      footer ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+      footer li {
+        margin-bottom: 20px;
+      }
+      footer li a:hover {
+        text-decoration: underline;
+      }
+      .footer-company {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #111;
+      }
+      .footer-company .mark {
+        font-size: 22px;
+        color: #111;
+      }
+      .footer-contact h4 {
+        font-size: 16px;
+        color: #111;
+        margin-bottom: 18px;
+      }
+      .footer-contact p {
+        font-size: 13px;
+        color: #555;
+      }
+      .copyright {
+        border-top: 1px solid #c9c9c9;
+        margin-top: 56px;
+        text-align: center;
+        color: #333;
+        font-size: 13.5px;
+        padding: 26px 0 30px;
+      }
+      /* popup */
+      .popup {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        width: 230px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        z-index: 60;
+      }
+      .popup .thumb {
+        height: 150px;
+      }
+      .popup .body {
+        padding: 10px;
+      }
+      .popup .btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 12px;
+      }
+      .popup .close {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+      }
+      @media (max-width: 860px) {
+        nav {
+          display: none;
+        }
+        .hero-in,
+        .sol-card,
+        .cta-box {
+          grid-template-columns: 1fr;
+        }
+        .product-grid,
+        .problem-grid,
+        .case-grid,
+        .footer-simple,
+        .problem-ills {
+          grid-template-columns: 1fr;
+        }
+        .cta-cell {
+          border-right: none;
+          border-bottom: 1px solid #eee;
+        }
+        .athena .big-img {
+          height: 260px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#2a8cf0" />
-          <stop offset="1" stop-color="#0f5cc4" />
-        </linearGradient>
-        <symbol id="logo-mark" viewBox="0 0 26 34">
-          <path
-            d="M11 5 L5.5 24.5 Q4.3 29 9 29 L21 29"
-            fill="none"
-            stroke="url(#logoGrad)"
-            stroke-width="6.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </symbol>
-        <symbol id="i-arrow" viewBox="0 0 24 24">
-          <path
-            d="M4 12h15M13 6l6 6-6 6"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </symbol>
-        <symbol id="i-mail-fill" viewBox="0 0 24 24">
-          <path
-            fill="currentColor"
-            d="M3.5 5h17A1.5 1.5 0 0 1 22 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 17.5v-11A1.5 1.5 0 0 1 3.5 5zm.9 2L12 12.3 19.6 7H4.4z"
-          />
-        </symbol>
-        <symbol id="i-mail" viewBox="0 0 24 24">
-          <g
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="5.5" width="18" height="13" rx="1.5" />
-            <path d="M3.5 6.5l8.5 6.5 8.5-6.5" />
-          </g>
-        </symbol>
-        <symbol id="i-check" viewBox="0 0 24 24">
-          <path
-            d="M5 12.5l4.5 4.5L19 7.5"
-            fill="none"
-            stroke="#fff"
-            stroke-width="3.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </symbol>
-      </defs>
-    </svg>
-
-    <!-- Header -->
-    <header class="header" id="top">
-      <div class="wrap header__in">
-        <a
-          href="/"
-          class="logo"
-          aria-label="Logica Solutions（ロジカソリューションズ）トップへ"
+    <header>
+      <div class="header-in">
+        <a class="logo" href="#"
+          ><span class="logo-mark">≋</span
+          ><span
+            ><b>Logica Solutions</b><small>ロジカソリューションズ</small></span
+          ></a
         >
-          <img class="logo__mark" src="/images/logo.png" alt="" width="152" height="132" />
-          <span class="logo__txt"
-            ><span class="logo__name">Logica Solutions</span
-            ><span class="logo__kana">ロジカソリューションズ</span></span
-          >
-        </a>
-        <nav class="gnav" aria-label="メインメニュー">
-          <ul>
-            <li><a href="/ai-phone/">AI電話対応</a></li>
-            <li><a href="/sales-roleplay/">AI営業ロープレ</a></li>
-            <li><a href="#reason">選ばれる理由</a></li>
-            <li><a href="#about">運営者情報</a></li>
-          </ul>
+        <nav>
+          <a href="#products">サービス</a><a href="#solutions">選ばれる理由</a
+          ><a href="#cta">料金</a><a href="#faq">FAQ</a>
         </nav>
-        <a href="#contact" class="h-btn"
-          >無料相談を申し込む<svg class="arrow" aria-hidden="true">
-            <use href="#i-arrow" /></svg
-        ></a>
-        <button
-          class="menu-btn"
-          aria-label="メニューを開く"
-          aria-expanded="false"
-        >
-          <span></span><span></span><span></span>
-        </button>
+        <div class="header-btns">
+          <a class="btn btn-blue" href="#cta">お問い合わせ　＋</a>
+          <a class="btn btn-outline" href="contact.html"
+            >資料ダウンロード　＋</a
+          >
+        </div>
       </div>
     </header>
 
-    <main>
-      <!-- Hero -->
-      <section class="hero" aria-labelledby="hero-ttl">
-        <div class="wrap">
-          <div class="hero__txt">
-            <p class="hero__lead">AIで、現場の「困った」を解決する。</p>
-            <h1 class="hero__ttl" id="hero-ttl">
-              AIで、もっとラクに、<br /><span
-                >もっと成長<span class="sm">を。</span></span
-              ><span class="sr-only"
-                >｜Logica
-                Solutions（ロジカソリューションズ）のAI電話対応サービス・AI営業ロープレツール</span
-              >
-            </h1>
-            <p class="hero__desc">
-              Logica Solutions（ロジカソリューションズ）は、<br />電話対応や営業育成など、日々の仕事の負担を<br />AIで減らすサービスを提供しています。
-            </p>
-            <a href="#service" class="hero__btn"
-              >サービスを見る<svg class="arrow" aria-hidden="true">
-                <use href="#i-arrow" /></svg
-            ></a>
+    <section class="hero">
+      <div class="hero-in">
+        <div class="hero-text">
+          <h1>人手不足を解消・効率化</h1>
+          <p>電話対応と営業育成の『人手が足りない』を、AIで減らす。</p>
+          <div class="hero-btns">
+            <a class="btn btn-gold" href="#cta">お問い合わせ　＋</a>
+            <a class="btn btn-white" href="contact.html">資料ダウンロード　＋</a>
           </div>
         </div>
-      </section>
-
-      <!-- Services -->
-      <section class="svc" id="service" aria-labelledby="service-ttl">
-        <div class="wrap">
-          <div class="sh">
-            <span class="sh__en en">SERVICE</span>
-            <h2 class="sh__ttl" id="service-ttl">提供サービス</h2>
-          </div>
-          <div class="svc__grid">
-            <a href="/ai-phone/" class="svc__card">
-              <div class="ic" aria-hidden="true">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 5 5L14 13l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"
-                  />
-                </svg>
-              </div>
-              <span class="svc__tag">AI PHONE</span>
-              <h3 class="svc__name">AI電話対応サービス</h3>
-              <p class="svc__desc">
-                AIが24時間、あなたの代わりに電話に応答。電話番の負担や取りこぼしをなくし、本業に集中できる環境をつくります。
-              </p>
-              <ul class="svc__points">
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >24時間365日の自動応答
-                </li>
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >用件の聞き取り・要約
-                </li>
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >設定・運用もおまかせ
-                </li>
-              </ul>
-              <p class="svc__price">限定3社：初期費用無料</p>
-              <span class="svc__more"
-                >詳しく見る<svg class="arrow" aria-hidden="true">
-                  <use href="#i-arrow" /></svg
-              ></span>
-            </a>
-            <a href="/sales-roleplay/" class="svc__card">
-              <div class="ic" aria-hidden="true">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <rect x="9" y="3" width="6" height="11" rx="3" />
-                  <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" />
-                </svg>
-              </div>
-              <span class="svc__tag">AI ROLEPLAY</span>
-              <h3 class="svc__name">AI営業ロープレツール</h3>
-              <p class="svc__desc">
-                AIがお客様役になり、声で商談を練習。終了後すぐに6項目で採点し、改善点と言い換え例まで提示します。
-              </p>
-              <ul class="svc__points">
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >声で話せるAIお客様役
-                </li>
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >6項目の自動採点・改善アドバイス
-                </li>
-                <li>
-                  <span class="chk" aria-hidden="true"
-                    ><svg><use href="#i-check" /></svg></span
-                  >自社の商材・お客様で練習
-                </li>
-              </ul>
-              <span class="svc__more"
-                >詳しく見る<svg class="arrow" aria-hidden="true">
-                  <use href="#i-arrow" /></svg
-              ></span>
-            </a>
-          </div>
+        <div class="hero-img">
+          <img src="images/roleplay.jpg" alt="AIロープレのオンライン商談画面" />
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Strengths -->
-      <section class="strengths" id="reason" aria-labelledby="reason-ttl">
-        <div class="strengths__in">
-          <div class="strengths__img">
-            <img
-              src="/images/strengths.jpg"
-              alt="あなたの「やりたい」をAIで実現する。"
-              width="718"
-              height="458"
-              loading="lazy"
-              decoding="async"
+    <section class="problems">
+      <div class="wrap">
+        <h2>こんな悩みありませんか？</h2>
+        <div class="problem-ills">
+          <svg
+            viewBox="0 0 320 240"
+            role="img"
+            aria-label="担当者が分散して対応が追いつかないイメージ"
+          >
+            <circle cx="160" cy="118" r="96" fill="#2563eb" />
+            <rect
+              x="72"
+              y="52"
+              width="176"
+              height="118"
+              rx="9"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
             />
+            <circle cx="90" cy="68" r="4" fill="#2563eb" />
+            <circle cx="104" cy="68" r="4" fill="#2563eb" />
+            <circle cx="118" cy="68" r="4" fill="#2563eb" />
+            <g fill="#cfe1ff">
+              <rect x="92" y="88" width="8" height="8" />
+              <rect x="110" y="88" width="8" height="8" />
+              <rect x="146" y="88" width="8" height="8" />
+              <rect x="182" y="88" width="8" height="8" />
+              <rect x="92" y="106" width="8" height="8" />
+              <rect x="128" y="106" width="8" height="8" />
+              <rect x="164" y="106" width="8" height="8" />
+              <rect x="200" y="106" width="8" height="8" />
+              <rect x="110" y="124" width="8" height="8" />
+              <rect x="146" y="124" width="8" height="8" />
+              <rect x="182" y="124" width="8" height="8" />
+              <rect x="92" y="142" width="8" height="8" />
+              <rect x="164" y="142" width="8" height="8" />
+              <rect x="200" y="142" width="8" height="8" />
+            </g>
+            <g fill="#2563eb">
+              <rect x="128" y="88" width="8" height="8" />
+              <rect x="164" y="124" width="8" height="8" />
+              <rect x="200" y="88" width="8" height="8" />
+              <rect x="110" y="142" width="8" height="8" />
+            </g>
+            <line
+              x1="72"
+              y1="152"
+              x2="248"
+              y2="152"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <path
+              d="M138 170 L128 196 h64 L182 170"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <circle cx="160" cy="161" r="4" fill="#cfe1ff" />
+            <g>
+              <circle
+                cx="88"
+                cy="188"
+                r="27"
+                fill="#eaf3ff"
+                stroke="#1a1a1a"
+                stroke-width="2.5"
+              />
+              <circle
+                cx="88"
+                cy="184"
+                r="10"
+                fill="#fff"
+                stroke="#1a1a1a"
+                stroke-width="2"
+              />
+              <path
+                d="M78 180 a10 10 0 0 1 20 0 l0 -3 a10 8 0 0 0 -20 0 z"
+                fill="#1a1a1a"
+              />
+              <path d="M76 204 a12 8 0 0 1 24 0" fill="#1a1a1a" />
+            </g>
+            <g>
+              <circle
+                cx="238"
+                cy="104"
+                r="25"
+                fill="#eaf3ff"
+                stroke="#1a1a1a"
+                stroke-width="2.5"
+              />
+              <circle
+                cx="238"
+                cy="101"
+                r="9"
+                fill="#fff"
+                stroke="#1a1a1a"
+                stroke-width="2"
+              />
+              <path
+                d="M229 97 a9 9 0 0 1 18 0 l0 -3 a9 7 0 0 0 -18 0 z"
+                fill="#1a1a1a"
+              />
+              <path d="M227 118 a11 7 0 0 1 22 0" fill="#1a1a1a" />
+            </g>
+            <g>
+              <circle
+                cx="240"
+                cy="192"
+                r="30"
+                fill="#2563eb"
+                stroke="#1a1a1a"
+                stroke-width="2.5"
+              />
+              <path d="M226 178 h28 v16 l-14 9 -14 -9 z" fill="#fff" />
+              <circle cx="240" cy="186" r="5" fill="#2563eb" />
+              <path d="M231 196 a9 6 0 0 1 18 0" fill="#2563eb" />
+            </g>
+          </svg>
+          <svg
+            viewBox="0 0 320 240"
+            role="img"
+            aria-label="情報や記録が散らばっているイメージ"
+          >
+            <circle cx="160" cy="118" r="96" fill="#2563eb" />
+            <g
+              stroke="#7db1ff"
+              stroke-width="2.5"
+              stroke-dasharray="1 7"
+              stroke-linecap="round"
+              fill="none"
+            >
+              <path d="M232 14 h56 v56" />
+              <path d="M88 226 H32 V170" />
+            </g>
+            <path
+              d="M78 108 L112 52 a8 8 0 0 1 7 -4 h82 a8 8 0 0 1 7 4 L242 108"
+              fill="#dceeff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <rect
+              x="104"
+              y="66"
+              width="112"
+              height="34"
+              rx="6"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <rect
+              x="96"
+              y="84"
+              width="128"
+              height="34"
+              rx="6"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <rect
+              x="118"
+              y="44"
+              width="84"
+              height="30"
+              rx="6"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <line
+              x1="132"
+              y1="59"
+              x2="172"
+              y2="59"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <path
+              d="M70 104 h62 a14 14 0 0 1 14 14 a12 12 0 0 0 12 12 h4 a12 12 0 0 0 12 -12 a14 14 0 0 1 14 -14 h62 v76 a16 16 0 0 1 -16 16 H86 a16 16 0 0 1 -16 -16 z"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <rect
+              x="88"
+              y="126"
+              width="52"
+              height="7"
+              rx="3.5"
+              fill="#a9ccff"
+            />
+            <rect
+              x="88"
+              y="142"
+              width="34"
+              height="7"
+              rx="3.5"
+              fill="#a9ccff"
+            />
+            <rect
+              x="132"
+              y="112"
+              width="56"
+              height="7"
+              rx="3.5"
+              fill="#a9ccff"
+            />
+            <rect
+              x="140"
+              y="126"
+              width="40"
+              height="7"
+              rx="3.5"
+              fill="#a9ccff"
+            />
+            <g>
+              <circle
+                cx="238"
+                cy="184"
+                r="30"
+                fill="#2563eb"
+                stroke="#1a1a1a"
+                stroke-width="2.5"
+              />
+              <rect x="222" y="168" width="32" height="5" fill="#fff" />
+              <rect x="222" y="178" width="32" height="5" fill="#fff" />
+              <rect x="222" y="188" width="32" height="10" fill="#fff" />
+              <circle cx="238" cy="193" r="4.5" fill="#2563eb" />
+            </g>
+          </svg>
+          <svg
+            viewBox="0 0 320 240"
+            role="img"
+            aria-label="成果や評価が見えにくいイメージ"
+          >
+            <circle cx="160" cy="118" r="96" fill="#4a90ff" />
+            <rect
+              x="66"
+              y="48"
+              width="188"
+              height="124"
+              rx="9"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <circle cx="84" cy="64" r="4" fill="#2563eb" />
+            <circle cx="98" cy="64" r="4" fill="#2563eb" />
+            <circle cx="112" cy="64" r="4" fill="#2563eb" />
+            <rect x="66" y="78" width="52" height="76" fill="#eaf3ff" />
+            <g stroke="#bcd6ff" stroke-width="4">
+              <line x1="76" y1="96" x2="108" y2="96" />
+              <line x1="76" y1="110" x2="108" y2="110" />
+              <line x1="76" y1="124" x2="108" y2="124" />
+              <line x1="76" y1="138" x2="100" y2="138" />
+            </g>
+            <circle cx="92" cy="88" r="5" fill="#fff" />
+            <rect x="150" y="86" width="30" height="6" rx="3" fill="#a9ccff" />
+            <rect x="150" y="100" width="42" height="6" rx="3" fill="#a9ccff" />
+            <g fill="#cfe1ff">
+              <rect x="136" y="128" width="13" height="26" />
+              <rect x="162" y="118" width="13" height="36" />
+              <rect x="188" y="132" width="13" height="22" />
+              <rect x="214" y="108" width="13" height="46" />
+            </g>
+            <polyline
+              points="132,140 156,124 182,136 208,110 234,92"
+              fill="none"
+              stroke="#2563eb"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <line
+              x1="66"
+              y1="154"
+              x2="254"
+              y2="154"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <path
+              d="M136 172 L126 198 h68 L184 172"
+              fill="#fff"
+              stroke="#1a1a1a"
+              stroke-width="2.5"
+            />
+            <circle cx="160" cy="163" r="4" fill="#cfe1ff" />
+            <g>
+              <circle
+                cx="242"
+                cy="188"
+                r="30"
+                fill="#2563eb"
+                stroke="#1a1a1a"
+                stroke-width="2.5"
+              />
+              <g stroke="#fff" stroke-width="3.5" stroke-linecap="round">
+                <line x1="226" y1="176" x2="236" y2="176" />
+                <line x1="226" y1="188" x2="236" y2="188" />
+                <line x1="226" y1="200" x2="236" y2="200" />
+              </g>
+              <circle cx="224" cy="176" r="3.5" fill="#fff" />
+              <circle cx="224" cy="188" r="3.5" fill="#fff" />
+              <circle cx="224" cy="200" r="3.5" fill="#fff" />
+              <path
+                d="M242 172 a10 10 0 0 1 10 10 v6 h-14 v-8 a6 6 0 0 1 4 -8z"
+                fill="#fff"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="problem-grid">
+          <div class="problem-card">
+            <span class="tag">電話</span>
+            <h3>電話のたびに作業が中断される</h3>
+            <p>集中したい時間ほど、問い合わせの電話が重なります。</p>
           </div>
-          <div class="strengths__body">
-            <div class="sh">
-              <span class="sh__en en">OUR STRENGTHS</span>
-              <h2 class="sh__ttl" id="reason-ttl">
-                Logica Solutionsが選ばれる理由
-              </h2>
+          <div class="problem-card">
+            <span class="tag">電話</span>
+            <h3>営業時間外・繁忙時の電話を取りこぼしている</h3>
+            <p>出られなかった電話の中に、次のお客様がいるかもしれません。</p>
+          </div>
+          <div class="problem-card">
+            <span class="tag">電話</span>
+            <h3>人手不足で電話番を置けない</h3>
+            <p>同じ問い合わせへの対応に、毎日時間を取られています。</p>
+          </div>
+          <div class="problem-card">
+            <span class="tag sales">営業育成</span>
+            <h3>ロープレの相手役を用意できない</h3>
+            <p>上司や先輩の時間を確保できず、練習の機会が作れません。</p>
+          </div>
+          <div class="problem-card">
+            <span class="tag sales">営業育成</span>
+            <h3>フィードバックをもらえない</h3>
+            <p>練習しても、何が良くて何が足りないかが分からないままです。</p>
+          </div>
+          <div class="problem-card">
+            <span class="tag sales">営業育成</span>
+            <h3>評価が人によってバラバラになる</h3>
+            <p>新人育成の基準が担当者ごとに違い、成長が見えにくくなります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="products" id="products">
+      <div class="wrap">
+        <p class="en">Product/<br />Service</p>
+        <h2 class="title">製品・サービス</h2>
+        <div class="product-grid">
+          <a class="product-card" href="#solutions">
+            <div class="thumb">
+              <img src="images/roleplay.jpg" alt="AIロープレ" />
             </div>
-            <ul class="checks">
+            <div class="body">
+              <h3>AIロープレ <span>→</span></h3>
+              <p>
+                営業ロープレを行い、フィードバックを受け取れます。御社専用のシナリオ作成までいたします。
+              </p>
+            </div>
+          </a>
+          <a class="product-card" href="#solutions">
+            <div class="thumb">
+              <img src="images/phone-service.jpg" alt="AI電話対応" />
+            </div>
+            <div class="body">
+              <h3>AI電話対応 <span>→</span></h3>
+              <p>時間とコストを削減できる「AI電話対応」サービスです。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="solutions" id="solutions">
+      <div class="wrap">
+        <p class="en">Our<br />Solutions</p>
+        <h2 class="title">実現できること</h2>
+
+        <div class="sol-card">
+          <div>
+            <p class="label">統合 経営ダッシュボード</p>
+            <h3>AIロープレ実施</h3>
+            <p>
+              AIがお客様役になり、商談を練習できます。商材や相手の役職・性格を設定でき、難易度も「やさしい／ふつう／手ごわい」の3段階。上司や先輩の時間を使わず、本番に近い練習ができます。
+            </p>
+          </div>
+          <div class="thumb">
+            <img src="images/roleplay.jpg" alt="AIロープレ実施画面" />
+          </div>
+        </div>
+
+        <div class="sol-card">
+          <div class="thumb">
+            <img src="images/score-report.jpg" alt="AIロープレ 採点レポート" />
+          </div>
+          <div>
+            <p class="label">AI面接ダッシュボード</p>
+            <h3>AIロープレ 採点レポート</h3>
+            <p>
+              商談が終わると、関係構築・ヒアリング・提案・反論対応・クロージング・話し方の6項目で自動採点。良かった点・改善点・言い換え例に加え、お客様の本音まで振り返れるため、評価のバラつきなく育成できます。
+            </p>
+          </div>
+        </div>
+
+        <div class="sol-card">
+          <div>
+            <p class="label">AIロープレダッシュボード</p>
+            <h3>AI電話応答</h3>
+            <p>
+              電話の一次対応を、24時間365日自動化<br />営業時間外や休日、繁忙時もAIが電話に応答します。営業時間・場所・料金など、よくある質問にはAIがその場で回答するため、電話の取りこぼしを防げます。
+            </p>
+          </div>
+          <div class="thumb">
+            <img src="images/phone-answer.jpg" alt="AI電話応答" />
+          </div>
+        </div>
+
+        <div class="sol-card">
+          <div class="thumb">
+            <img src="images/phone-summary.jpg" alt="AI電話 要約・お知らせ" />
+          </div>
+          <div>
+            <p class="label">AI面談ダッシュボード</p>
+            <h3>AI電話 要約・お知らせ</h3>
+            <p>
+              お客様の用件をAIが聞き取り、要点をまとめてお知らせします。スタッフは要約を確認して、折り返しが必要な電話から対応すればOK。本業を止める電話が減ります。
+            </p>
+          </div>
+        </div>
+
+        <p class="note">※掲載している機能は開発中の内容を含みます</p>
+      </div>
+    </section>
+
+    <section class="athena">
+      <div class="wrap">
+        <p class="en">What's “Athena”</p>
+        <h2>正確な応答を支える<br />Logica SolutionsのAI設計とは</h2>
+        <p class="lead">
+          Logica
+          Solutionsのサービスは、AIが自社の資料を参照して回答する仕組み（RAG）の開発経験をもとに設計されています。業種・業務に合わせて応答内容や練習設定をオーダーメイドで調整するため、一律のテンプレートでは届かない、現場に合った回答ができます。
+        </p>
+        <div class="big-img">
+          <img src="images/athena-ai.jpg" alt="AI設計のイメージ" />
+        </div>
+      </div>
+    </section>
+
+    <section class="cases" id="cases">
+      <div class="wrap">
+        <p class="en">Effect</p>
+        <h2 class="title">導入イメージ</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <div class="thumb">
+              <img
+                src="images/case-field.jpg"
+                alt="現場でタブレットを使う担当者"
+              />
+            </div>
+            <p class="co">株式会社オーネット</p>
+            <h3>
+              現場に出ている間の電話はAIが一次対応。必要な電話だけが担当者に届く
+            </h3>
+            <p>
+              全員が現場や接客に出ている時間帯も、AIがお名前・連絡先・相談内容を聞き取り、要点をまとめてお知らせ。作業を止めて電話に出る必要がなくなります。
+            </p>
+            <p class="svc"><b>サービス</b> AI電話対応サービス</p>
+          </article>
+          <article class="case-card">
+            <div class="thumb">
+              <img src="images/case-sales.jpg" alt="営業チームのミーティング" />
+            </div>
+            <p class="co">エン株式会社</p>
+            <h3>新人が商談前に、自分で繰り返し練習できる</h3>
+            <p>
+              AIが自社の商材でお客様役を務め、終了直後に6項目で採点。マネージャーが相手役とフィードバックに使う時間を減らし、評価のバラつきも抑えられます。
+            </p>
+            <p class="svc"><b>サービス</b> AI営業ロープレツール</p>
+          </article>
+          <article class="case-card">
+            <div class="thumb">
+              <img src="images/case-station.jpg" alt="駅のホーム" />
+            </div>
+            <p class="co">西日本旅客鉄道株式会社</p>
+            <h3>
+              時間外の予約電話はAIが受ける。翌朝、要約を確認して折り返すだけに
+            </h3>
+            <p>
+              受付スタッフが不在の時間帯も、AIが予約変更やよくある質問に対応。用件は要約で届くため、取りこぼしと確認の手間を同時に減らせます。
+            </p>
+            <p class="svc"><b>サービス</b> AI電話対応サービス</p>
+          </article>
+        </div>
+        <div class="center-btn">
+          <a class="btn btn-blue" href="#">他の事例を見る</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="wrap">
+        <p class="en">Seminar</p>
+        <h2 class="title">よくあるご質問</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3>Q. AIや機械に詳しくなくても導入できますか？</h3>
+            <p>
+              A.
+              はい、問題ありません。応答内容や練習内容の設計から設定まで当社が行います。専門用語を使わずに丁寧にご説明しますので、AIが初めての方でも安心してご利用いただけます。
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Q. AIや機械に詳しくなくても導入できますか？</h3>
+            <p>
+              A.
+              はい、問題ありません。応答内容や練習内容の設計から設定まで当社が行います。専門用語を使わずに丁寧にご説明しますので、AIが初めての方でも安心してご利用いただけます。
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Q. AIや機械に詳しくなくても導入できますか？</h3>
+            <p>
+              A.
+              はい、問題ありません。応答内容や練習内容の設計から設定まで当社が行います。専門用語を使わずに丁寧にご説明しますので、AIが初めての方でも安心してご利用いただけます。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="news">
+      <div class="wrap">
+        <p class="en">News</p>
+        <h2 class="title">お知らせ</h2>
+        <div class="news-list">
+          <div class="news-item">
+            <time>2026.11.13</time>
+            <p>
+              PeopleX、組織改善で2,500社超の実績を持つラフールと協業を開始／「ラフールサーベイ」と「PeopleX
+              AI面談」の組合せにより、組織改善に向けた新たな価値を提供
+            </p>
+          </div>
+          <div class="news-item">
+            <time>2026.11.10</time>
+            <p>
+              PeopleX、AI時代の人材育成・セキュリティラーニングを実現する「PeopleX
+              アセスメント＆ラーニング(AIスキル/セキュリティ)」の提供を開始／10段階の「AIスキル標準」で、未修得層から変革人材まで可視化
+            </p>
+          </div>
+          <div class="news-item">
+            <time>2026.11.05</time>
+            <p>
+              「PeopleX
+              AIロープレ」、接客シーン特化型のトレーニングパッケージ提供開始／カスハラ対応、顧客体験向上のための反復演習により、店舗スタッフの働きやすさの向上を支援
+            </p>
+          </div>
+          <div class="news-item">
+            <time>2026.11.04</time>
+            <p>
+              鈴与システムテクノロジー、「PeopleX AIロープレ」を導入／「PeopleX
+              AIロープレ」の自社での活用および静岡県における紹介・導入支援推進
+            </p>
+          </div>
+          <div class="news-item">
+            <time>2026.10.27</time>
+            <p>
+              “労働力不足解決カンパニー”うるる、PeopleXのAI面接・AI面談・AIロープレを導入
+            </p>
+          </div>
+        </div>
+        <div class="center-btn">
+          <a class="btn btn-blue" href="#">もっと見る</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="cta">
+      <div class="wrap">
+        <h2>Logica Solutions導入をお考えの方へ</h2>
+        <div class="cta-box">
+          <div class="cta-cell">
+            <p class="en">CONTACT</p>
+            <h3>導入に関するお問い合わせ</h3>
+            <p>
+              導入に関してご不明点がございましたら、お気軽にお問い合わせください。
+            </p>
+            <a class="btn btn-gold" href="#">お問い合わせ　＋</a>
+          </div>
+          <div class="cta-cell">
+            <p class="en">Free Plan</p>
+            <h3>デモ体験</h3>
+            <p>AIロープレ営業を<br />お試しいただけます。</p>
+            <a class="btn btn-gold" href="#">無料でお試し</a>
+          </div>
+          <div class="cta-cell">
+            <p class="en">Downloads</p>
+            <h3>お役立ち資料ダウンロード</h3>
+            <p>各サービス資料を無料でダウンロードいただけます。</p>
+            <a class="btn btn-gold" href="contact.html">ダウンロード　＋</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-in">
+        <div class="footer-simple">
+          <div>
+            <p class="footer-brand">
+              Logica <span class="tag">AI電話／ロープレ</span>
+            </p>
+            <ul>
+              <li><a href="#products">サービス</a></li>
+              <li><a href="#solutions">実現できること</a></li>
+              <li><a href="#cases">導入イメージ</a></li>
+              <li><a href="#faq">よくあるご質問</a></li>
+              <li><a href="#cta">お問い合わせ</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="footer-company">
+              <span class="mark">▚</span> Logica Solutions（運営会社）
+            </p>
+            <ul>
+              <li><a href="#">会社概要　↗</a></li>
+              <li><a href="#">プライバシーポリシー　↗</a></li>
+              <li><a href="#">情報セキュリティの方針　↗</a></li>
+              <li><a href="#">特定商取引法に基づく表記　↗</a></li>
+            </ul>
+          </div>
+          <div class="footer-contact">
+            <h4>お問い合わせ</h4>
+            <p>
+              導入のご相談はお問い合わせフォーム、またはメールでご連絡ください。
+            </p>
+            <ul>
               <li>
-                <span class="chk" aria-hidden="true"
-                  ><svg><use href="#i-check" /></svg
-                ></span>
-                <div>
-                  <h3>AI開発の経験がある担当者が直接対応</h3>
-                  <p>
-                    SIGNATE（データ分析コンペ）学生部門2位、RAGの開発経験を持つ開発者が、設計から導入まで直接担当します。
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span class="chk" aria-hidden="true"
-                  ><svg><use href="#i-check" /></svg
-                ></span>
-                <div>
-                  <h3>業種・業務に合わせたオーダーメイド</h3>
-                  <p>
-                    一律のテンプレートではなく、お客様の業務や課題に合わせて設定します。
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span class="chk" aria-hidden="true"
-                  ><svg><use href="#i-check" /></svg
-                ></span>
-                <div>
-                  <h3>導入後も安心の伴走サポート</h3>
-                  <p>導入して終わりではなく、使いながら改善していきます。</p>
-                </div>
-              </li>
-              <li>
-                <span class="chk" aria-hidden="true"
-                  ><svg><use href="#i-check" /></svg
-                ></span>
-                <div>
-                  <h3>AIや機械が苦手でも大丈夫</h3>
-                  <p>
-                    設定は当社が行います。専門用語を使わず、丁寧にご説明します。
-                  </p>
-                </div>
+                <a href="mailto:info@logica-solutions.jp"
+                  >info@logica-solutions.jp</a
+                >
               </li>
             </ul>
           </div>
         </div>
-      </section>
-
-      <!-- About -->
-      <section class="about" id="about" aria-labelledby="about-ttl">
-        <div class="wrap">
-          <div class="sh">
-            <span class="sh__en en">ABOUT</span>
-            <h2 class="sh__ttl" id="about-ttl">運営者情報</h2>
-          </div>
-          <table class="about__tbl">
-            <tr>
-              <th scope="row">屋号</th>
-              <td>Logica Solutions（ロジカソリューションズ）</td>
-            </tr>
-            <tr>
-              <th scope="row">代表者</th>
-              <td>石川 優斗</td>
-            </tr>
-            <tr>
-              <th scope="row">事業内容</th>
-              <td>
-                <a href="/ai-phone/" style="color: var(--blue)"
-                  >AI電話対応サービス</a
-                >の提供<br /><a
-                  href="/sales-roleplay/"
-                  style="color: var(--blue)"
-                  >AI営業ロープレツール</a
-                >の提供
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">経歴</th>
-              <td>
-                ・中学3年からプログラミング・ITを独学<br />
-                ・SIGNATE「SMBC Group GREEN×DATA Challenge 2024」学生部門
-                第2位<br />
-                ・RAG（AIが資料を参照して回答する仕組み）を個人で開発
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">お問い合わせ</th>
-              <td>
-                <a
-                  href="mailto:info@logica-solutions.jp"
-                  style="color: var(--blue)"
-                  >info@logica-solutions.jp</a
-                >
-              </td>
-            </tr>
-          </table>
-        </div>
-      </section>
-
-      <!-- CTA -->
-      <section class="cta" id="contact" aria-labelledby="contact-ttl">
-        <svg
-          class="net"
-          viewBox="0 0 1280 90"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <g stroke="#9fd0ff" stroke-width=".6" fill="#cfe8ff">
-            <path d="M0 70 L60 40 L130 75 L190 20 M60 40 L110 10" fill="none" />
-            <circle cx="60" cy="40" r="1.6" />
-            <circle cx="130" cy="75" r="1.6" />
-            <circle cx="190" cy="20" r="1.6" />
-            <circle cx="110" cy="10" r="1.4" />
-            <path
-              d="M1080 15 L1140 50 L1200 25 L1280 60 M1140 50 L1170 85"
-              fill="none"
-            />
-            <circle cx="1080" cy="15" r="1.6" />
-            <circle cx="1140" cy="50" r="1.6" />
-            <circle cx="1200" cy="25" r="1.6" />
-            <circle cx="1170" cy="85" r="1.4" />
-          </g>
-        </svg>
-        <div class="cta__in">
-          <div>
-            <h2 class="cta__ttl" id="contact-ttl">
-              まずは、あなたのお悩みを<br />お気軽にご相談ください。
-            </h2>
-            <p class="cta__sub">
-              AIの力で、もっと自由で、もっと豊かな働き方を。
-            </p>
-          </div>
-          <a
-            href="mailto:info@logica-solutions.jp?subject=%E7%84%A1%E6%96%99%E7%9B%B8%E8%AB%87%E3%81%AE%E7%94%B3%E3%81%97%E8%BE%BC%E3%81%BF"
-            class="cta__btn"
-            ><svg class="mail" aria-hidden="true"><use href="#i-mail" /></svg
-            >無料相談を申し込む<svg class="arrow" aria-hidden="true">
-              <use href="#i-arrow" /></svg
-          ></a>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="wrap footer__in">
-        <a
-          href="/"
-          class="logo"
-          aria-label="Logica Solutions（ロジカソリューションズ）トップへ"
-        >
-          <img class="logo__mark" src="/images/logo.png" alt="" width="152" height="132" />
-          <span class="logo__txt"
-            ><span class="logo__name">Logica Solutions</span
-            ><span class="logo__kana">ロジカソリューションズ</span></span
-          >
-        </a>
-        <nav class="fnav" aria-label="フッターメニュー">
-          <ul>
-            <li><a href="/">トップ</a></li>
-            <li><a href="/ai-phone/">AI電話対応サービス</a></li>
-            <li><a href="/sales-roleplay/">AI営業ロープレ</a></li>
-            <li><a href="#about">運営者情報</a></li>
-          </ul>
-        </nav>
-        <p class="copy">
-          <small>&copy; 2025 Logica Solutions. All Rights Reserved.</small>
-        </p>
+        <p class="copyright">© 2026 Logica Solutions. All rights reserved.</p>
       </div>
     </footer>
 
-    <script>
-      (function () {
-        var h = document.querySelector(".header"),
-          b = document.querySelector(".menu-btn");
-        b.addEventListener("click", function () {
-          var o = h.classList.toggle("open");
-          b.setAttribute("aria-expanded", o);
-        });
-        h.querySelectorAll(".gnav a").forEach(function (a) {
-          a.addEventListener("click", function () {
-            h.classList.remove("open");
-            b.setAttribute("aria-expanded", "false");
-          });
-        });
-      })();
-    </script>
+    <div class="popup" id="popup">
+      <button
+        class="close"
+        onclick="document.getElementById('popup').style.display = 'none'"
+      >
+        ×
+      </button>
+      <div class="thumb">
+        <img src="images/roleplay.jpg" alt="AIロープレ" />
+      </div>
+      <div class="body">
+        <a class="btn btn-gold" href="#">› AI面接 サイトへ</a>
+      </div>
+    </div>
   </body>
 </html>
