@@ -1,0 +1,3 @@
+/works https://works.logica-solutions.jp/ 301
+/works/ https://works.logica-solutions.jp/ 301
+/works/* https://works.logica-solutions.jp/:splat 301
